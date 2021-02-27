@@ -41,6 +41,6 @@ sf::RenderWindow& Window::getWindow() { return this->window; }
 const bool Window::isOpen() const { return window.isOpen(); }
 const bool Window::isFocused() const { return this->focused; }
 
-const unsigned int Window::width() const { return WIDTH; }
-const unsigned int Window::height() const { return HEIGHT; }
-const unsigned int Window::scale() const { return SCALE; }
+const unsigned int Window::getWidth()  const	{ return WIDTH;  }
+const unsigned int Window::getHeight() const	{ return HEIGHT; }
+const unsigned int Window::getScale()  const	{ return SCALE;  }

@@ -2,13 +2,19 @@
 
 #include "State.h"
 
+#include <SFML/Graphics.hpp>
+
 class GameState : public State
 {
+private:
+	sf::Texture t;
+	sf::Sprite s;
+
 public:
-	GameState(GameData& data) : State(data) {}
-	virtual ~GameState() override;
+	GameState(GameData& data) : State{ data } {}
 
 	void virtual load();
+	void virtual unload() override;
 
 	void virtual handleInput();		// makes events based on keyboard input
 	void virtual update(const float dt);	// updates all objects of state

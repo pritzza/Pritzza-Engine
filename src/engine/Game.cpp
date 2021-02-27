@@ -8,9 +8,9 @@ Game::Game(const std::string& windowName, const unsigned int windowWidth, const 
 	data{windowName, windowWidth, windowHeight, windowScale}
 {
 	// add starting state
-	data.stateMachine.queueOperation(StateMachineOperation(STATE_MACHINE_OPERATION::ADD, STATE_ID::DEFAULT, std::make_shared<GameState>(GameState(data))));
+	data.stateMachine.queueOperation({ STATE_MACHINE_OPERATION::ADD, STATE_ID::DEFAULT, std::make_shared<GameState>(GameState(data)) });
 	// change to said state
-	data.stateMachine.queueOperation(StateMachineOperation(STATE_MACHINE_OPERATION::CHANGE, STATE_ID::DEFAULT));
+	data.stateMachine.queueOperation({ STATE_MACHINE_OPERATION::CHANGE, STATE_ID::DEFAULT });
 }
 
 void Game::gameLoop()
@@ -26,6 +26,9 @@ void Game::gameLoop()
 
 		if (data.window.isFocused() && data.stateMachine.currentState() != nullptr)
 		{
+			if (!data.stateMachine.currentState()->isLoaded())
+				data.stateMachine.currentState()->load();
+
 			data.stateMachine.currentState()->handleInput();
 			data.stateMachine.currentState()->update(dt);
 			data.stateMachine.currentState()->render();

@@ -27,7 +27,7 @@ public:
 	const bool isOpen() const;
 	const bool isFocused() const;
 
-	const unsigned int width() const;
-	const unsigned int height() const;
-	const unsigned int scale() const;
+	const unsigned int getWidth() const;
+	const unsigned int getHeight() const;
+	const unsigned int getScale() const;
 };

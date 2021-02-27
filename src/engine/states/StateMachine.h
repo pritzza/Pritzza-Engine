@@ -4,7 +4,7 @@
 #include <memory>
 
 #include "State.h"
-#include "StateMachineOperation.h"
+#include "StateMachineEvent.h"
 
 class StateMachine
 {
@@ -13,17 +13,17 @@ private:
 
 	STATE_ID currentStateID;
 
-	std::vector<StateMachineOperation> operationQueue;
+	std::vector<std::shared_ptr<StateMachineEvent>> operationQueue;
  
 private:
 	void changeState(const STATE_ID id);	// changes the current state without modifying any other existing states
-	void addState(const STATE_ID id, const std::shared_ptr<State> state);	// inserts a new state at a STATE_ID key
+	void addState(const STATE_ID id, const std::shared_ptr<State>& state);	// inserts a new state at a STATE_ID key
 	void removeState(const STATE_ID id);	// removes a state at a STATE_ID key
 
 public:
 	void processChanges();	// iterates through operationQueue to see what operations need to be done
 
-	void queueOperation(const StateMachineOperation& operation);
+	void queueOperation(const StateMachineEvent& operation);
 
 	const std::shared_ptr<State> currentState() const;
 };
