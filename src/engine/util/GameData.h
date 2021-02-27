@@ -2,6 +2,7 @@
 
 #include "Window.h"
 #include "../states/StateMachine.h"
+#include "../resource manager/ResourceManagers.h"
 
 struct GameData
 {
@@ -12,4 +13,5 @@ struct GameData
 
 	Window window;
 	StateMachine stateMachine;
+	ResourceManagers resourceManagers;
 };

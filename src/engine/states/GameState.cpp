@@ -9,8 +9,10 @@ void GameState::load()
 	std::cout << "load GAMESTATE\n";
 	// load all resources
 
-	t.loadFromFile("res/textures/img.png");
-	s.setTexture(t);
+	auto& tm = data.resourceManagers.textureManager;
+
+	tm.load(TEXTURE::DEFAULT);
+	s.setTexture(tm.get(TEXTURE::DEFAULT));	// s is sf::Sprite
 
 	setLoaded();
 }
@@ -19,6 +21,8 @@ void GameState::unload()
 {
 	std::cout << "unload GAMESTATE\n";
 	// release all resources
+
+	data.resourceManagers.textureManager.unload(TEXTURE::DEFAULT);
 }
 
 void GameState::handleInput()
