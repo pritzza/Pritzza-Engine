@@ -4,14 +4,18 @@
 
 #include <SFML/Graphics.hpp>
 
+#include <vector>
+
 class GameState : public State
 {
 private:
-	sf::Texture t;
-	sf::Sprite s;
+	sf::Sprite s1;
+	sf::Sprite s2;
+
+	std::vector<sf::Sprite*> sprites;
 
 public:
-	GameState(GameData& data) : State{ data } {}
+	GameState(GameData& data) : State{ data } { std::cout << "GAMESTATE constructor"; }
 
 	void virtual load();
 	void virtual unload();

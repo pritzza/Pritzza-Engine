@@ -1,15 +1,20 @@
 #include "Window.h"
 
-Window::Window(const std::string& windowName, const unsigned int w, const unsigned int h, const unsigned int s)
+#include "../gfx/Camera.h"
+
+Window::Window(const Camera& camera, const std::string& windowName, const unsigned int width, const unsigned int height, const unsigned int size)
 	:
-	window(sf::VideoMode(w* s, h* s), windowName),
-	WIDTH{ w },
-	HEIGHT{ h },
-	SCALE{ s }
+	window(sf::VideoMode(width * size, height * size), windowName),
+	camera{ camera },
+	WIDTH{ width },
+	HEIGHT{ height },
+	PIXEL_SIZE{ size }
 {}
 
 void Window::update()
 {
+	this->window.setView(camera.getView());
+
 	sf::Event event;
 
 	if (this->window.pollEvent(event))
@@ -36,11 +41,11 @@ void Window::draw(const sf::Drawable& drawable)
 	this->window.draw(drawable);
 }
 
-sf::RenderWindow& Window::getWindow() { return this->window; }
+sf::RenderWindow& Window::getWindow() { return this->window;	}
 
-const bool Window::isOpen() const { return window.isOpen(); }
-const bool Window::isFocused() const { return this->focused; }
+const bool Window::isOpen() const	  { return window.isOpen(); }
+const bool Window::isFocused() const  { return this->focused;   }
 
-const unsigned int Window::getWidth()  const	{ return WIDTH;  }
-const unsigned int Window::getHeight() const	{ return HEIGHT; }
-const unsigned int Window::getScale()  const	{ return SCALE;  }
+const unsigned int Window::getWidth()  const		{ return WIDTH;		  }
+const unsigned int Window::getHeight() const		{ return HEIGHT;	  }
+const unsigned int Window::getPixelSize()  const	{ return PIXEL_SIZE;  }

@@ -22,12 +22,17 @@ void Game::gameLoop()
 		clock.restart();	
 
 		data.stateMachine.processChanges();
+
+		data.camera.update();
 		data.window.update();
 
 		if (data.window.isFocused() && data.stateMachine.currentState() != nullptr)
 		{
 			if (!data.stateMachine.currentState()->isLoaded())
+			{
 				data.stateMachine.currentState()->load();
+				continue;
+			}
 
 			data.stateMachine.currentState()->handleInput();
 			data.stateMachine.currentState()->update(dt);

@@ -11,8 +11,14 @@ void GameState::load()
 
 	auto& tm = data.resourceManagers.textureManager;
 
-	tm.load(TEXTURE::DEFAULT);
-	s.setTexture(tm.get(TEXTURE::DEFAULT));	// s is sf::Sprite
+	//tm.load(TEXTURE::DEFAULT);
+	s1.setTexture(tm.get(TEXTURE::ERROR));
+	s2.setTexture(tm.get(TEXTURE::ERROR));
+
+	sprites.push_back(&s1);
+	sprites.push_back(&s2);
+
+	s1.setPosition(100, 10);
 
 	setLoaded();
 }
@@ -39,7 +45,8 @@ void GameState::render() const
 {
 	data.window.beginDraw();
 
-	data.window.draw(s);
+	for (const auto s : sprites)
+		data.window.draw(*s);
 	// render scene objects and entities and stuff here
 
 	data.window.endDraw();

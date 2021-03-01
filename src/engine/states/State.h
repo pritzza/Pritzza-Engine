@@ -17,11 +17,9 @@ protected:
 
 public:
 	State(GameData& data) : data{ data } { std::cout << "STATE constructor\n"; }
-	//State(const State& s) = delete;
-	~State() { std::cout << "STATE deconstructor\n"; unload(); }
 
 	void virtual load() = 0;
-	void virtual unload() { std::cout << "STATE unload\n"; }
+	void virtual unload() = 0;
 
 	void virtual handleInput() = 0;		// makes events based on keyboard input
 	void virtual update(const float dt) = 0;	// updates all objects of state

@@ -23,7 +23,7 @@ template <class Key, class Resource>
 class ResourceManager
 {
 private:
-	std::unordered_map<Key, std::shared_ptr<Resource>> resources;
+	std::unordered_map<Key, Resource> resources;
 
 public:
 	ResourceManager()
@@ -66,9 +66,9 @@ public:
 	const Resource& get(const Key id) const
 	{
 		if (resources.find(id) != resources.end())
-			return *resources.at(id);
+			return resources.at(id);
 
-		return *resources.at(Key::ERROR);
+		return resources.at(Key::ERROR);
 	}
 
 private:
@@ -76,9 +76,9 @@ private:
 	{
 		if (this->resources.find(resID) == resources.end())	// res not already loaded
 		{
-			std::shared_ptr<Resource> res = std::make_shared<Resource>();
+			Resource res;
 
-			if (res->loadFromFile(fileName))	// if loaded sucessfully, insert and return id
+			if (res.loadFromFile(fileName))	// if loaded sucessfully, insert and return id
 			{
 				this->resources.insert({ resID, res });
 				return resID;

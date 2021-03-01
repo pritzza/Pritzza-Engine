@@ -13,7 +13,7 @@ private:
 
 	STATE_ID currentStateID;
 
-	std::vector<std::shared_ptr<StateMachineEvent>> operationQueue;
+	std::vector<StateMachineEvent> operationQueue;
  
 private:
 	void changeState(const STATE_ID id);	// changes the current state without modifying any other existing states
