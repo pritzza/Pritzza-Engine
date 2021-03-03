@@ -6,6 +6,7 @@ void Button::update(const bool isPressed)
 {
     if      (isIdle()   && isPressed)  state = BUTTON_STATE::TAPPED;
     else if (isTapped() && isPressed)  state = BUTTON_STATE::HELD;
+    else if (isTapped() && !isPressed) state = BUTTON_STATE::RELEASED;
     else if (isHeld()   && !isPressed) state = BUTTON_STATE::RELEASED;
     else if (isReleased()            ) state = BUTTON_STATE::IDLE;
 }

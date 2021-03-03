@@ -4,18 +4,20 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "../entities/Entity.h"
+
 #include <vector>
 
 class GameState : public State
 {
 private:
-	sf::Sprite s1;
-	sf::Sprite s2;
+	Entity e1;
+	Entity e2;
 
-	std::vector<sf::Sprite*> sprites;
+	std::vector<Entity*> entities;
 
 public:
-	GameState(GameData& data) : State{ data } { std::cout << "GAMESTATE constructor"; }
+	GameState(GameData& data) : State{ data } {}
 
 	void virtual load();
 	void virtual unload();

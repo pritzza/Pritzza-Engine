@@ -11,7 +11,7 @@ enum class BUTTON_STATE
 class Button
 {
 private:
-	BUTTON_STATE state;
+	BUTTON_STATE state{ BUTTON_STATE::IDLE };
 
 public:
 	void update(const bool isPressed);

@@ -4,5 +4,21 @@
 
 class Sprite
 {
+private:
+	sf::IntRect sbox;	// TextureRect
+	sf::Sprite s;
 
+	const sf::Vector2f& pos;
+
+private:
+	void setPos(const sf::Vector2f& pos);
+
+public:
+	Sprite(const sf::Vector2f& pos, const unsigned width, const unsigned height);
+
+	void update();
+
+	void setTexture(const sf::Texture& t);
+
+	const sf::Sprite& getSprite() const;
 };

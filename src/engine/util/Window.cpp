@@ -1,6 +1,8 @@
 #include "Window.h"
 
 #include "../gfx/Camera.h"
+#include "../gfx/Sprite.h"
+#include "../entities/Entity.h"
 
 Window::Window(const Camera& camera, const std::string& windowName, const unsigned int width, const unsigned int height, const unsigned int size)
 	:
@@ -39,6 +41,19 @@ void Window::endDraw()
 void Window::draw(const sf::Drawable& drawable)
 {
 	this->window.draw(drawable);
+}
+
+void Window::draw(const Sprite& sprite)
+{
+	this->window.draw(sprite.getSprite());
+}
+
+void Window::draw(Entity& entity, const bool drawBounds)
+{
+	this->window.draw(entity.getSFSprite());
+
+	if (drawBounds)
+		this->window.draw(entity.getRect());
 }
 
 sf::RenderWindow& Window::getWindow() { return this->window;	}

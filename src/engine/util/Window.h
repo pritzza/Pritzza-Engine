@@ -3,6 +3,8 @@
 #include <SFML/Graphics.hpp>
 
 class Camera;
+class Sprite;
+class Entity;
 
 class Window
 {
@@ -25,6 +27,8 @@ public:
 	void beginDraw();
 	void endDraw();
 	void draw(const sf::Drawable& drawable);
+	void draw(const Sprite& sprite);
+	void draw(Entity& entity, const bool drawBounds = false);
 
 	sf::RenderWindow& getWindow();
 

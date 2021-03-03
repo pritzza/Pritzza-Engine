@@ -2,8 +2,6 @@
 
 struct GameData;
 
-#include <iostream>
-
 class State
 {
 private:
@@ -16,7 +14,7 @@ protected:
 	void setLoaded() { this->loaded = true; }
 
 public:
-	State(GameData& data) : data{ data } { std::cout << "STATE constructor\n"; }
+	State(GameData& data) : data{ data } {}
 
 	void virtual load() = 0;
 	void virtual unload() = 0;

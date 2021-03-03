@@ -28,6 +28,9 @@ void Game::gameLoop()
 
 		if (data.window.isFocused() && data.stateMachine.currentState() != nullptr)
 		{
+			//data.mouse.update();
+			data.keyboard.update();
+
 			if (!data.stateMachine.currentState()->isLoaded())
 			{
 				data.stateMachine.currentState()->load();
