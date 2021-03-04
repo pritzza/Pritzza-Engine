@@ -10,12 +10,13 @@ private:
 
 	const sf::Vector2f& pos;
 
+private:
+	void setRectPos(const sf::Vector2f& p);
+
 public:
 	AABB(const sf::Vector2f& pos, const unsigned width, const unsigned height);
 
 	void update();
-
-	void setPos(const sf::Vector2f& pos);
 
 	bool isColliding(const AABB& target) const;
 

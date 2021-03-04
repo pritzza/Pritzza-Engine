@@ -9,8 +9,12 @@ Entity::Entity()
 	box{ pos, 20, 20 },
 	sprite{ pos, 16, 16 }
 {
+	std::cout << this->pos.x << ' ' << this->pos.y << '\n' << 
+				box.getPos().x << " " << box.getPos().y << '\n' << 
+				sprite.getPos().x << ' ' << sprite.getPos().y << '\n';
+
 	update();
-	std::cout << pos.x << " " << pos.y << " " << sprite.getSprite().getPosition().x << " " << sprite.getSprite().getPosition().y << '\n';
+	//std::cout << pos.x << " " << pos.y << " " << sprite.getSprite().getPosition().x << " " << sprite.getSprite().getPosition().y << '\n';
 }
 
 void Entity::update()
@@ -23,8 +27,13 @@ void Entity::update()
 
 void Entity::updatePos()
 {
-	std::cout << "Entity:" << pos.x << ", " << pos.y << "\n\n";
-	this->setPos({ pos.x + vel.x, pos.y + vel.y });
+	std::cout << "Entity:" << pos.x << ", " << pos.y << '\n' <<
+				"Entity Vel:" << vel.x << ", " << vel.y << "\n\n";
+
+	this->setPos({
+		pos.x + vel.x,
+		pos.y + vel.y
+		});
 }
 
 void Entity::setTexture(const sf::Texture& texture)
@@ -32,9 +41,9 @@ void Entity::setTexture(const sf::Texture& texture)
 	this->sprite.setTexture(texture);
 }
 
-void Entity::setPos(const sf::Vector2f& pos)
+void Entity::setPos(const sf::Vector2f pos)
 {
-	this->box.setPos(pos);
+	this->pos = pos;
 }
 
 void Entity::move(const sf::Vector2f& v)
@@ -44,27 +53,10 @@ void Entity::move(const sf::Vector2f& v)
 	this->vel += v;
 }
 
-const sf::Vector2f& Entity::getPos() const
-{
-	return this->box.getPos();
-}
+const sf::Vector2f& Entity::getPos() const	{ return this->box.getPos();		}
 
-const Sprite& Entity::getSprite()
-{
-	return this->sprite;
-}
+const Sprite& Entity::getSprite()			{ return this->sprite;				}
+const sf::Sprite& Entity::getSFSprite()		{ return this->sprite.getSprite();	}
 
-const sf::Sprite& Entity::getSFSprite()
-{
-	return this->sprite.getSprite();
-}
-
-const AABB& Entity::getAABB()
-{
-	return this->box;
-}
-
-const sf::RectangleShape Entity::getRect()
-{
-	return this->box.getRect();
-}
+const AABB& Entity::getAABB()				{ return this->box;					}
+const sf::RectangleShape Entity::getRect()  { return this->box.getRect();		}

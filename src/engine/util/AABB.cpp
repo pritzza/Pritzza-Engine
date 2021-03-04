@@ -5,8 +5,8 @@
 AABB::AABB(const sf::Vector2f& pos, const unsigned width, const unsigned height)
 	:
 	cbox{ 0, 0, width, height },
-	pos{ pos },
-	rect({ static_cast<float>(width), static_cast<float>(height) })
+	rect{ { static_cast<float>(width), static_cast<float>(height) } },
+	pos{ pos }
 {
 	rect.setOutlineThickness(.1f);
 	rect.setFillColor(sf::Color(37, 15, 201, 169));
@@ -17,12 +17,12 @@ void AABB::update()
 {
 	std::cout << "AABB:" << pos.x << ", " << pos.y << '\n';
 
-	this->setPos(this->pos);
+	this->setRectPos(pos);
 }
 
-void AABB::setPos(const sf::Vector2f& pos)
+void AABB::setRectPos(const sf::Vector2f& p)
 {
-	this->rect.setPosition(pos);
+	this->rect.setPosition(p);
 }
 
 bool AABB::isColliding(const AABB& target) const
@@ -39,19 +39,17 @@ bool AABB::isColliding(const AABB& target) const
 
 	//std::cout << "x: " << x1 << " y: " << y1 << " w: " << w1 << " h: " << h1 << ' ';
 	//std::cout << "x: " << x2 << " y: " << y2 << " w: " << w2 << " h: " << h2 << '\n';
-	//
-	return (x1 < x2 + w2 &&
+
+	return (
+		x1 < x2 + w2 &&
 		x1 + w1 > x2 &&
 		y1 < y2 + h2 &&
-		y1 + h1 > y2);
-
-	//return cbox.intersects(target.getBounds());
+		y1 + h1 > y2
+		);
 }
 
-const sf::Vector2f& AABB::getPos() const { return this->pos; }
-const sf::IntRect& AABB::getBox() const { return this->cbox; }
+const sf::Vector2f& AABB::getPos() const		{ return this->pos;  }
 
-const sf::RectangleShape AABB::getRect() const
-{
-	return this->rect;
-}
+const sf::IntRect& AABB::getBox() const			{ return this->cbox; }
+
+const sf::RectangleShape AABB::getRect() const	{ return this->rect; }

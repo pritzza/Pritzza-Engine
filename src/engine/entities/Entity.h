@@ -23,7 +23,7 @@ public:
 	void setTexture(const sf::Texture& texture);
 	
 	void move(const sf::Vector2f& v);
-	void setPos(const sf::Vector2f& pos);	// fix
+	void setPos(const sf::Vector2f pos);	// fix
 
 	const sf::Vector2f& getPos() const;
 	const Sprite& getSprite();
