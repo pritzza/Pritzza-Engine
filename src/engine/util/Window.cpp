@@ -2,7 +2,7 @@
 
 #include "../gfx/Camera.h"
 #include "../gfx/Sprite.h"
-#include "../entities/Entity.h"
+#include "../game objects/Entity.h"
 
 Window::Window(const Camera& camera, const std::string& windowName, const unsigned int width, const unsigned int height, const unsigned int size)
 	:

@@ -4,23 +4,24 @@
 
 class Sprite
 {
-private:
+protected:
 	sf::IntRect sbox;	// TextureRect
 	sf::Sprite s;
 
-	const sf::Vector2f& pos;
-
 private:
-	void setSpritePos(const sf::Vector2f pos);
+	void setSpritePos(const sf::Vector2f& pos);
 
 public:
-	Sprite(const sf::Vector2f& pos, const unsigned width, const unsigned height);
+	Sprite() {};
+	Sprite(const sf::Vector2f& pos, const sf::Vector2u& dimensions, const sf::Texture& texture);
 
-	void update();
+	void update(const sf::Vector2f& pos);	// dt set to 0 so non animated sprites dont require dt
 
-	void setTexture(const sf::Texture& t);
+	void setTexture(const sf::Texture& texture);
 
-	const sf::Vector2f getPos() const;
+	void setDimensions(const sf::Vector2u& dimensions);
+
+	const sf::Vector2f& getPos() const;
 
 	const sf::Sprite& getSprite() const;
 };

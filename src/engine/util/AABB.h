@@ -8,19 +8,20 @@ private:
 	sf::IntRect cbox;
 	sf::RectangleShape rect;
 
-	const sf::Vector2f& pos;
-
 private:
 	void setRectPos(const sf::Vector2f& p);
 
 public:
-	AABB(const sf::Vector2f& pos, const unsigned width, const unsigned height);
+	AABB();
 
-	void update();
+	void update(const sf::Vector2f& pos);
 
 	bool isColliding(const AABB& target) const;
 
+	void setDimensions(const sf::Vector2u dimensions);
+
 	const sf::Vector2f& getPos() const;
 	const sf::IntRect& getBox() const;
+
 	const sf::RectangleShape getRect() const;
 };

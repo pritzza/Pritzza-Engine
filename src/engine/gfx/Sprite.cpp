@@ -1,25 +1,20 @@
 #include "Sprite.h"
 
-#include <iostream>
-
-Sprite::Sprite(const sf::Vector2f& pos, const unsigned width, const unsigned height)
-	:
-	sbox{ 0, 0, width, height },
-	pos{ pos }
+Sprite::Sprite(const sf::Vector2f& pos, const sf::Vector2u& dimensions, const sf::Texture& texture)
 {
-	s.setTextureRect(sbox);
+	this->setSpritePos(pos);
+	this->setDimensions(dimensions);
+	this->setTexture(texture);
 }
 
-void Sprite::update()
+void Sprite::update(const sf::Vector2f& pos)
 {
-	std::cout << "Sprite:" << pos.x << ", " << pos.y << '\n';
-
 	this->setSpritePos(pos);
 }
 
-void Sprite::setSpritePos(const sf::Vector2f p)
+void Sprite::setSpritePos(const sf::Vector2f& pos)
 {
-	this->s.setPosition(p);
+	this->s.setPosition(pos);
 }
 
 void Sprite::setTexture(const sf::Texture& t)
@@ -27,9 +22,12 @@ void Sprite::setTexture(const sf::Texture& t)
 	this->s.setTexture(t);
 }
 
-const sf::Vector2f Sprite::getPos() const
+void Sprite::setDimensions(const sf::Vector2u& d)
 {
-	return this->pos;
+	this->sbox = sf::IntRect(0, 0, d.x, d.y);
+	this->s.setTextureRect(sbox);
 }
 
-const sf::Sprite& Sprite::getSprite() const		{ return this->s;	 }
+const sf::Vector2f& Sprite::getPos() const  { return this->getSprite().getPosition(); }
+
+const sf::Sprite& Sprite::getSprite() const { return this->s; }

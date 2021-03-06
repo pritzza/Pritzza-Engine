@@ -12,10 +12,13 @@ void GameState::load()
 
 	const auto& t = tm.get(tm.load(TEXTURE::DEFAULT));
 
+	tileMap.init({ 7, 5 }, tm);
+
+	e1.init( { 0,0 }, {16,16} );
+	e2.init( {32,32}, {16,16} );
+
 	e1.setTexture(t);
 	e2.setTexture(t);
-
-	//e2.setPos({ 10, 0 });
 
 	entities.push_back(&e1);
 	entities.push_back(&e2);
@@ -53,11 +56,13 @@ void GameState::update(const float dt)
 	// tick everything
 
 	for (const auto e : entities)
-		e->update();
+		e->update(dt);
 
-	//if (!e1.isColliding(e2))
-	//	e1.move({ 1,0 });
-
+	if (e1.isColliding(e2))
+	{
+		e1.move({ 1,0 });
+		e1.setSize({ 32,32 });
+	}
 	//data.camera.multiplyZoom(1.01f);
 }
 
@@ -68,6 +73,9 @@ void GameState::render() const
 	Window& w{ data.window };
 
 	w.beginDraw();
+
+	for (const auto& t : tileMap.getTiles())
+		w.draw(t.getSprite());
 
 	for (const auto e : entities)
 		w.draw(*e, true);

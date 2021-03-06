@@ -2,7 +2,7 @@
 
 int main()
 {
-    Game game{ "Hamburger VS Pizza", 150, 100, 4, 10 };
+    Game game{ "Hamburger VS Pizza", 150, 100, 4, 60 };
 
     game.gameLoop();
 

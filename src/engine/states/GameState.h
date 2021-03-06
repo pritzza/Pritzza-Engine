@@ -2,15 +2,15 @@
 
 #include "State.h"
 
-#include <SFML/Graphics.hpp>
+#include "../game objects/Entity.h"
 
-#include "../entities/Entity.h"
-
-#include <vector>
+#include "../levels/TileMap.h"
 
 class GameState : public State
 {
 private:
+	TileMap tileMap;
+
 	Entity e1;
 	Entity e2;
 
