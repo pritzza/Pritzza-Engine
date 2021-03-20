@@ -30,9 +30,16 @@ void GameObject::setPos(const sf::Vector2f pos)			 { this->pos = pos;					 }
 
 
 const sf::Vector2f& GameObject::getPos() const			 { return this->box.getPos();		 }
+const sf::Vector2f  GameObject::getCenterPos() const	 
+{ 
+	return sf::Vector2f( 
+	this->box.getPos().x + this->sprite.getDimensions().x / 2.f, 
+	this->box.getPos().y + this->sprite.getDimensions().y / 2.f
+	);	
+}
 
-const Sprite& GameObject::getSprite() const				 { return this->sprite;				 }
 Sprite& GameObject::getSprite()							 { return this->sprite;				 }
+const Sprite& GameObject::getSprite() const				 { return this->sprite;				 }
 const sf::Sprite& GameObject::getSFSprite()	const		 { return this->sprite.getSprite();	 }
 
 const AABB& GameObject::getAABB() const					 { return this->box;			 	 }

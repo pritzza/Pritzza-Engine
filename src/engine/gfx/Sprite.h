@@ -22,6 +22,7 @@ public:
 	void setDimensions(const sf::Vector2u& dimensions);
 
 	const sf::Vector2f& getPos() const;
+	const sf::Vector2i& getDimensions() const;
 
 	const sf::Sprite& getSprite() const;
 };

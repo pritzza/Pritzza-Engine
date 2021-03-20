@@ -18,4 +18,6 @@ public:
 	virtual void update(const float dt);
 
 	void move(const sf::Vector2f& v);
+
+	const sf::Vector2f& getVel() const;
 };

@@ -65,3 +65,8 @@ void Entity::move(const sf::Vector2f& v)
 	this->vel.x += v.x * this->acc.x;
 	this->vel.y += v.y * this->acc.y;
 }
+
+const sf::Vector2f& Entity::getVel() const
+{
+	return this->vel;
+}

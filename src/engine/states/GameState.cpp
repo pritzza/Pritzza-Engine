@@ -12,10 +12,10 @@ void GameState::load()
 
 	const auto& t = tm.get(tm.load(TEXTURE::DEFAULT));
 
-	tileMap.init({ 7, 5 }, tm);
+	tileMap.init({ 100, 100 }, tm);
 
 	e1.init( { 0,0 }, {16,16} );
-	e2.init( {32,32}, {16,16} );
+	e2.init( { 0,0 }, {12,12} );
 
 	e1.setTexture(t);
 	e2.setTexture(t);
@@ -23,7 +23,7 @@ void GameState::load()
 	entities.push_back(&e1);
 	entities.push_back(&e2);
 
-	//data.camera.setZoom(.01f);
+	//data.camera.setZoom(.5f);
 
 	setLoaded();	// enable the state's "loaded" flag after everything has been loaded
 }
@@ -55,6 +55,8 @@ void GameState::update(const float dt)
 {
 	// tick everything
 
+	data.camera.setPos(e1.getCenterPos());
+
 	for (const auto e : entities)
 		e->update(dt);
 
@@ -63,6 +65,7 @@ void GameState::update(const float dt)
 		e1.move({ 1,0 });
 		e1.setSize({ 32,32 });
 	}
+
 	//data.camera.multiplyZoom(1.01f);
 }
 

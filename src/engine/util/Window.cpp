@@ -38,22 +38,21 @@ void Window::endDraw()
 	this->window.display();
 }
 
-void Window::draw(const sf::Drawable& drawable)
-{
-	this->window.draw(drawable);
-}
-
 void Window::draw(const Sprite& sprite)
 {
-	this->window.draw(sprite.getSprite());
+	if (camera.isInView(sprite))
+		this->window.draw(sprite.getSprite());
 }
 
 void Window::draw(Entity& entity, const bool drawBounds)
 {
-	this->window.draw(entity.getSFSprite());
+	if (camera.isInView(entity.getSprite()))
+	{
+		this->window.draw(entity.getSFSprite());
 
-	if (drawBounds)
-		this->window.draw(entity.getRect());
+		if (drawBounds)
+			this->window.draw(entity.getRect());
+	}
 }
 
 sf::RenderWindow& Window::getWindow() { return this->window;	}

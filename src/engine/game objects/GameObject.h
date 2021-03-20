@@ -25,6 +25,7 @@ public:
 	void setTexture(const sf::Texture& texture);
 
 	const sf::Vector2f& getPos() const;
+	const sf::Vector2f getCenterPos() const;
 
 	Sprite& getSprite();
 	const Sprite& getSprite() const;

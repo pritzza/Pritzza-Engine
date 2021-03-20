@@ -28,6 +28,7 @@ void Sprite::setDimensions(const sf::Vector2u& d)
 	this->s.setTextureRect(sbox);
 }
 
-const sf::Vector2f& Sprite::getPos() const  { return this->getSprite().getPosition(); }
+const sf::Vector2f& Sprite::getPos() const			{ return this->getSprite().getPosition();					}	
+const sf::Vector2i& Sprite::getDimensions() const	{ return sf::Vector2i(this->sbox.width, this->sbox.height); }
 
-const sf::Sprite& Sprite::getSprite() const { return this->s; }
+const sf::Sprite& Sprite::getSprite() const			{ return this->s; }

@@ -8,7 +8,7 @@ void TileMap::init(const sf::Vector2u& d, const ResourceManager<TEXTURE, sf::Tex
 	tiles.resize(width * height);
 
 	for (int i = 0; i < width * height; ++i)
-		tiles[i].init(false, i, width, tm.get(TEXTURE::ERROR));
+		tiles[i].init(false, i, width, tm.get(TEXTURE::DEFAULT));
 }
 
 const std::vector<Tile>& TileMap::getTiles() const { return this->tiles; }
