@@ -2,6 +2,8 @@
 
 #include "../util/GameData.h"
 
+#include <cmath>
+
 #include <iostream>
 
 void GameState::load()
@@ -14,14 +16,16 @@ void GameState::load()
 
 	tileMap.init({ 100, 100 }, tm);
 
-	e1.init( { 0,0 }, {16,16} );
-	e2.init( { 0,0 }, {12,12} );
+	e1->init( { 64,64 }, {16,16}, t );
+	e2->init( { 0,0 }, {12,12}, t );
 
-	e1.setTexture(t);
-	e2.setTexture(t);
+	entities.push_back(e1);
+	entities.push_back(e2);
 
-	entities.push_back(&e1);
-	entities.push_back(&e2);
+	data.camera.setPos(e1->getCenterPos());
+
+	data.camera.setFollowingTarget(*e1);
+	data.camera.setState(CameraState::FOLLOWING);
 
 	//data.camera.setZoom(.5f);
 
@@ -42,31 +46,49 @@ void GameState::handleInput()
 	Keyboard& kb{ data.keyboard };
 
 	if (kb.w.isTapped() || kb.w.isHeld())
-		e1.move({ 0, -1 });
+		e1->move({ 0, -1 });
 	if (kb.a.isTapped() || kb.a.isHeld())
-		e1.move({ -1, 0 });
+		e1->move({ -1, 0 });
 	if (kb.s.isTapped() || kb.s.isHeld())
-		e1.move({ 0, 1 });
+		e1->move({ 0, 1 });
 	if (kb.d.isTapped() || kb.d.isHeld())
-		e1.move({ 1, 0 });
+		e1->move({ 1, 0 });
+
+	if (kb.space.isTapped())
+	{
+		data.camera.setState(CameraState::PANNING_EXPONENTIAL);
+		data.camera.panTo({ 0,0 }, 5.f);
+	}
+	else if (kb.space.isReleased())
+		data.camera.setState(CameraState::FOLLOWING);
 }
 
 void GameState::update(const float dt)
 {
 	// tick everything
 
-	data.camera.setPos(e1.getCenterPos());
-
 	for (const auto e : entities)
 		e->update(dt);
 
-	if (e1.isColliding(e2))
-	{
-		e1.move({ 1,0 });
-		e1.setSize({ 32,32 });
-	}
+	//std::cout << e1->getPos().x << ", " << e1->getPos().y << '\n';
 
-	//data.camera.multiplyZoom(1.01f);
+	if (e1->isColliding(*e2))
+	{
+		std::shared_ptr<Entity> e = std::make_shared<Entity>();
+		auto& tm = data.resourceManagers.textureManager;
+
+		e->init({ entities.back()->getCenterPos().x,0 }, {4,4}, tm.get(TEXTURE::DEFAULT));
+
+		entities.push_back(e);
+
+		//data.camera.panTo({ 369.f, 369.f }, 1.f);
+		//data.camera.setState(CameraState::PANNING_LINEAR);
+		//
+		//e1->move({ 1,0 });
+		//e1->setSize({ 32,32 });
+		//
+		//data.camera.multiplyZoom(1.01f);
+	}
 }
 
 void GameState::render() const

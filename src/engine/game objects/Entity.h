@@ -14,6 +14,7 @@ private:
 	
 public:
 	virtual void init(const sf::Vector2f& pos, const sf::Vector2u& dimensions);
+	virtual void init(const sf::Vector2f& pos, const sf::Vector2u& dimensions, const sf::Texture& t);
 
 	virtual void update(const float dt);
 

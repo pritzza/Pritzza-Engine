@@ -7,6 +7,14 @@ void GameObject::init(const sf::Vector2f& pos, const sf::Vector2u& dimensions)
 	this->setSize(dimensions);
 }
 
+void GameObject::init(const sf::Vector2f& pos, const sf::Vector2u& dimensions, const sf::Texture& t)
+{
+	this->pos = pos;
+
+	this->setSize(dimensions);
+	this->setTexture(t);
+}
+
 void GameObject::update(const float dt)
 {
 	this->box.update(this->pos);
@@ -33,8 +41,8 @@ const sf::Vector2f& GameObject::getPos() const			 { return this->box.getPos();		
 const sf::Vector2f  GameObject::getCenterPos() const	 
 { 
 	return sf::Vector2f( 
-	this->box.getPos().x + this->sprite.getDimensions().x / 2.f, 
-	this->box.getPos().y + this->sprite.getDimensions().y / 2.f
+	this->pos.x + this->sprite.getDimensions().x / 2.f, 
+	this->pos.y + this->sprite.getDimensions().y / 2.f
 	);	
 }
 

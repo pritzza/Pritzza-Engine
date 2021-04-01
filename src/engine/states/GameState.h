@@ -11,10 +11,10 @@ class GameState : public State
 private:
 	TileMap tileMap;
 
-	Entity e1;
-	Entity e2;
+	std::shared_ptr<Entity> e1 = std::make_shared<Entity>();
+	std::shared_ptr<Entity> e2 = std::make_shared<Entity>();
 
-	std::vector<Entity*> entities;
+	std::vector<std::shared_ptr<Entity>> entities;
 
 public:
 	GameState(GameData& data) : State{ data } {}

@@ -23,11 +23,12 @@ void Game::gameLoop()
 
 		data.stateMachine.processChanges();
 
-		data.camera.update();
 		data.window.update();
 
 		if (data.window.isFocused() && data.stateMachine.currentState() != nullptr)
 		{
+			data.camera.update(dt);
+
 			//data.mouse.update();
 			data.keyboard.update();
 

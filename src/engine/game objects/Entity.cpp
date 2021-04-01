@@ -9,6 +9,16 @@ void Entity::init(const sf::Vector2f& pos, const sf::Vector2u& dimensions)
 	this->setSize(dimensions);
 }
 
+void Entity::init(const sf::Vector2f& pos, const sf::Vector2u& dimensions, const sf::Texture& t)
+{
+	this->pos = pos;
+	this->vel = sf::Vector2f(0, 0);
+	this->acc = sf::Vector2f(30.f, 30.f);
+
+	this->setSize(dimensions);
+	this->setTexture(t);
+}
+
 void Entity::update(const float dt)
 {
 	this->updatePhysics(dt);
