@@ -9,9 +9,14 @@ class GameObject;
 enum class CameraState 
 {
 	FOLLOWING,
-	PANNING_LINEAR,
-	PANNING_EXPONENTIAL,
+	PANNING,
 	STATIC
+};
+
+enum class PanningType
+{
+	LINEAR,
+	EXPONENTIAL
 };
 
 class Camera
@@ -19,11 +24,15 @@ class Camera
 private:
 	const unsigned int WINDOW_WIDTH;
 	const unsigned int WINDOW_HEIGHT;
+	static constexpr bool ROUND_CAMERA_POS{ false };
+	static constexpr float PANNING_DISTANCE_THRESHOLD{ 1.f };
+	static constexpr float MIN_VEL{ 0.1f };
 
 private:
 	sf::View view;
 
 	sf::Vector2f pos{};
+	sf::Vector2f vel{};
 	float zoom{ 1.f };
 
 	CameraState activeState{ CameraState::STATIC };
@@ -33,39 +42,48 @@ private:
 	const Entity* target{ nullptr };
 
 	// panning
-	sf::Vector2f panPoint{ 0.f, 0.f };
+	sf::Vector2f focusPoint{};
+	sf::Vector2f startingPoint{};
 	float panningSpeed{ 1.f };
-	static constexpr float PANNING_DISTANCE_THRESHOLD{ 5.f };
+	
+	bool panComplete{ false };
+	PanningType panningType{ PanningType::LINEAR };
 
 private:
 	void updatePos(const float dt);
-	void pan(const bool isLinear);
-	void follow(const float dt);
+	void pan(const float dt);
+	void follow();
+
+	// used to see determine when to stop camera pan
+	const bool passingFocusPoint() const; // if camera has passed focus point when panning linearly
+	const bool nearingFocusPoint() const; // if camera has gotten close enough to focus point when panning exponentially
 
 public:
 	Camera(const unsigned int WINDOW_WIDTH, const unsigned int WINDOW_HEIGHT);
 
 	void update(const float dt);
 
-	const bool isInView(const Sprite& s) const;
+	// having the camera follow things
+	void setFollowingTarget(const Entity& target);
+	void startFollowing();
 
-	void setState(const CameraState s);
+	void startPanning(const sf::Vector2f& pos, const float smoof, const PanningType pt);	// smooth is how long it takes to pan
+
+	const bool isInView(const Sprite& s) const;
 
 	// moving the camera's view
 	void move(const sf::Vector2f& vel);		// relative
 	void setPos(const sf::Vector2f& pos);	// absolute
-	void panTo(const sf::Vector2f& pos, const float smoof);	// smoof is how long the pan takes
 
 	// modifiying the zoom of the camera
 	void addZoom(const float addend);
 	void multiplyZoom(const float factor);
 	void setZoom(const float zoom);
 
-	// having the camera follow things
-	void setFollowingTarget(const Entity& target);
-
 	// getters
 	const sf::Vector2f& getPos() const;
 	const sf::View& getView() const;
 	const float getZoom() const;
+
+	const bool isPanComplete() const;
 };

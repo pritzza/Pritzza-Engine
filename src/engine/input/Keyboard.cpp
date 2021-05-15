@@ -13,5 +13,6 @@ void Keyboard::update()
 	a.update(sf::Keyboard::isKeyPressed(sf::Keyboard::A));
 	s.update(sf::Keyboard::isKeyPressed(sf::Keyboard::S));
 	d.update(sf::Keyboard::isKeyPressed(sf::Keyboard::D));
+	e.update(sf::Keyboard::isKeyPressed(sf::Keyboard::E));
 	space.update(sf::Keyboard::isKeyPressed(sf::Keyboard::Space));
 }

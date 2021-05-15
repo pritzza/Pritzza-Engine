@@ -13,9 +13,13 @@ Camera::Camera(const unsigned int WINDOW_WIDTH, const unsigned int WINDOW_HEIGHT
 	WINDOW_HEIGHT{ WINDOW_HEIGHT }
 {}
 
+/*************************/
+/*    PRIVATE METHODS    */
+/*************************/
+
 void Camera::update(const float dt)
 {
-	//std::cout << "(" << pos.x << ", " << pos.y << ") zoom: " << zoom << '\n';
+	//std::cout << "(" << pos.x << " + " << vel.x << ", " << pos.y << " + " << vel.y << ") zoom: " << zoom << '\n';
 
 	this->updatePos(dt);
 
@@ -26,13 +30,9 @@ void Camera::updatePos(const float dt)
 {
 	switch (this->activeState)
 	{
-	case CameraState::FOLLOWING:			this->follow(dt);	break;
-	case CameraState::PANNING_LINEAR:		this->pan(true);	break;
-	case CameraState::PANNING_EXPONENTIAL:	this->pan(false);	break;
-	case CameraState::STATIC: break;	/*if the camera is static, do nothing*/
+	case CameraState::FOLLOWING: this->follow();	break;
+	case CameraState::PANNING:	 this->pan(dt);		break;
 	}
-
-	constexpr bool ROUND_CAMERA_POS{ false };
 
 	if (ROUND_CAMERA_POS)
 		this->view.setCenter(static_cast<int>(pos.x), static_cast<int>(pos.y));
@@ -40,73 +40,112 @@ void Camera::updatePos(const float dt)
 		this->view.setCenter(pos.x, pos.y);
 }
 
-void Camera::pan(const bool isLinear)
+void Camera::pan(const float dt)
 {
-	const sf::Vector2f distance{ panPoint.x - pos.x, panPoint.y - pos.y };
-	sf::Vector2f vel;
+	/* Thanks DeKrain for helping me with linear panning */
 
-	if (isLinear)	// linear pan
-	{	
-		const float angle{ atan(distance.y / distance.x) };
+	// Ideally this should be done once and then result saved
+	const sf::Vector2f displacement{ focusPoint.x - pos.x, focusPoint.y - pos.y };
 
-		vel = { angle / panningSpeed, angle / panningSpeed };
-	}
-	else // exponential pan	
-		vel = { distance.x / panningSpeed, distance.y / panningSpeed };
+	const float distance = std::hypot(displacement.x, displacement.y); // Hehe, shortcut for sqrt(displacement.x * displacement.x + displacement.y * displacement.y)
 
-	this->move(vel);
-
-	// if linear and panPoint vel * threshold close enough
-	// vs if exponential and within 1 * threshold distance of being close enough to panPoint
-	if  ( (abs(distance.x) + abs(distance.y) < vel.x * PANNING_DISTANCE_THRESHOLD   ||	
-		( (abs(distance.x) + abs(distance.y) < 1.f   * PANNING_DISTANCE_THRESHOLD)) && !isLinear))
+	if (!this->panComplete)
 	{
-		this->setPos(this->target->getCenterPos());
-		this->setState(defaultState);
+		if (this->panningType == PanningType::LINEAR)
+			this->vel = displacement * (panningSpeed / distance);
+		else if (this->panningType == PanningType::EXPONENTIAL)
+			this->vel = displacement / panningSpeed;
+
+		this->vel *= dt;
+
+		this->pos += this->vel;
+	}
+
+	if (nearingFocusPoint() && this->panningType == PanningType::EXPONENTIAL)
+	{
+		this->panComplete = true;
+	}
+	else if (passingFocusPoint())
+	{
+		this->panComplete = true;
+		this->setPos(focusPoint);
+		this->vel = { 0,0 };
 	}
 
 	//std::cout << "panning...\n";
 }
 
-void Camera::follow(const float dt)
+void Camera::follow()
 {
-	this->move({ target->getVel().x * dt, target->getVel().y * dt });
+	if (this->target != nullptr)
+		this->pos = this->target->getCenterPos();
+	
 	//std::cout << "following...\n";
+}
+
+const bool Camera::passingFocusPoint() const
+{
+	return ((startingPoint.x < focusPoint.x && (pos + vel).x >= focusPoint.x) || (startingPoint.x > focusPoint.x && (pos + vel).x <= focusPoint.x)) &&
+		   ((startingPoint.y < focusPoint.y && (pos + vel).y >= focusPoint.y) || (startingPoint.y > focusPoint.y && (pos + vel).y <= focusPoint.y));
+}
+
+const bool Camera::nearingFocusPoint() const
+{
+	return (abs(focusPoint.x - pos.x) + abs(focusPoint.y - pos.y) < PANNING_DISTANCE_THRESHOLD);
+}
+
+/*************************/
+/*    PRIVATE METHODS    */
+/*************************/
+
+void Camera::startPanning(const sf::Vector2f& pos, const float smoothness, const PanningType pt)
+{
+	this->panComplete = false;
+	this->activeState = CameraState::PANNING;
+	this->panningType = pt;
+	this->panningSpeed = smoothness;
+
+	this->startingPoint = this->pos;
+	this->focusPoint = pos;
+}
+
+void Camera::setFollowingTarget(const Entity& target) { this->target = &target; }
+void Camera::startFollowing()
+{
+	this->activeState = CameraState::FOLLOWING;
+	this->panComplete = false;
 }
 
 const bool Camera::isInView(const Sprite& s) const
 {
+	// dimensions of sprite
 	const float sx{ s.getPos().x };
 	const float sy{ s.getPos().y };
 	const int	sw{ s.getDimensions().x };
 	const int	sh{ s.getDimensions().y };
 
+	// dimensions of this camera
 	const float x{ pos.x - (WINDOW_WIDTH / zoom / 2.f) };
 	const float y{ pos.y - (WINDOW_HEIGHT / zoom / 2.f) };
 	const float w{ WINDOW_WIDTH / zoom };
 	const float h{ WINDOW_HEIGHT / zoom };
 
 	return
-		(sx + sw > x && sx < x + w) &&
-		(sy + sh > y && sy < y + h);
+		((sx + sw >= x && sx <= x + w) &&
+		 (sy + sh >= y && sy <= y + h)) ||
+		((sx <= x && sx + sw >= x + w) &&
+		 (sy <= y && sy + sh >= y + h));
 }
-
-void Camera::panTo(const sf::Vector2f& pos, const float smoothness)
-{
-	this->panningSpeed = smoothness;
-	this->panPoint = pos;
-}
-
-void Camera::setState(const CameraState s)		{ this->activeState = s; }
-void Camera::setFollowingTarget(const Entity& target)	  { this->target = &target;	}
 
 void Camera::addZoom(const float addend)		{ this->zoom += addend; }
 void Camera::multiplyZoom(const float factor)	{ this->zoom *= factor; }
 void Camera::setZoom(const float zoom)			{ this->zoom = zoom;	}
 
-void Camera::move(const sf::Vector2f& vel)		{ this->pos.x += vel.x;	this->pos.y += vel.y; }
-void Camera::setPos(const sf::Vector2f& pos)	{ this->pos.x = pos.x;	this->pos.y = pos.y;  }
+void Camera::move(const sf::Vector2f& vel)		{ this->vel.x = vel.x;	this->vel.y = vel.y; }
+void Camera::setPos(const sf::Vector2f& pos)	{ this->pos.x = pos.x;	this->pos.y = pos.y; }
 
 const sf::Vector2f& Camera::getPos() const	{ return this->pos;	 }
 const sf::View& Camera::getView() const		{ return this->view; }
 const float Camera::getZoom() const			{ return this->zoom; }
+
+const bool Camera::isPanComplete() const    { return this->panComplete; }

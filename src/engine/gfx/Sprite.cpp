@@ -1,5 +1,7 @@
 #include "Sprite.h"
 
+#include "../util/Direction.h"
+
 Sprite::Sprite(const sf::Vector2f& pos, const sf::Vector2u& dimensions, const sf::Texture& texture)
 {
 	this->setSpritePos(pos);
@@ -7,7 +9,7 @@ Sprite::Sprite(const sf::Vector2f& pos, const sf::Vector2u& dimensions, const sf
 	this->setTexture(texture);
 }
 
-void Sprite::update(const sf::Vector2f& pos)
+void Sprite::update(const sf::Vector2f& pos, const float dt=0.f, const Direction& dir=Direction::UP, const bool isMoving=false)
 {
 	this->setSpritePos(pos);
 }

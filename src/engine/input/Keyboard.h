@@ -10,7 +10,7 @@ private:
 	sf::RenderWindow& window;
 
 public:
-	Button w, a, s, d, space;
+	Button w, a, s, d, e, space;
 
 public:
 	Keyboard(sf::RenderWindow& window);

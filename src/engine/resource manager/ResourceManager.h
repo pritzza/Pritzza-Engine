@@ -3,10 +3,12 @@
 #include <unordered_map>
 #include <memory>
 
+// be sure that there is a switch condition for every resource added
 enum class TEXTURE
 {
 	ERROR,
-	DEFAULT
+	DEFAULT,
+	FROG_SPRITE_SHEET
 };
 enum class FONT
 {
@@ -35,8 +37,10 @@ public:
 	{
 		switch (id)
 		{
-		case TEXTURE::ERROR:	return loadFromFile("res/textures/richardd.png", id);	// error resource should always be loaded
-		case TEXTURE::DEFAULT:	return loadFromFile("res/textures/img.png", id);
+		case TEXTURE::DEFAULT:				return loadFromFile("res/textures/img.png", id);
+		case TEXTURE::FROG_SPRITE_SHEET:	return loadFromFile("res/textures/frog spritesheet.png", id);
+
+		default:							return loadFromFile("res/textures/richardd.png", id);	// error resource should always be loaded
 		}
 	}
 
@@ -44,8 +48,9 @@ public:
 	{
 		switch (id)
 		{
-		case FONT::ERROR:		return loadFromFile("res/fonts/pokemon_fire_red.ttf", id);	// error resource should always be loaded
 		case FONT::DEFAULT:		return loadFromFile("res/fonts/Roboto-ThinItalic.ttf", id);
+
+		default:				return loadFromFile("res/fonts/pokemon_fire_red.ttf", id);	// error resource should always be loaded
 		}
 	}
 
@@ -53,8 +58,9 @@ public:
 	{
 		switch (id)
 		{
-		case AUDIO::ERROR:		return loadFromFile("res/audio/001- EarthBound - Burp.mp3", id);	// error resource should always be loaded
 		case AUDIO::DEFAULT:	return loadFromFile("res/audio/170- Earthbound - OK _Ssuka_.mp3", id);
+		
+		default:				return loadFromFile("res/audio/001- EarthBound - Burp.mp3", id);	// error resource should always be loaded
 		}
 	}
 

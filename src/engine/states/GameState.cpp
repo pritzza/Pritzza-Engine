@@ -10,24 +10,30 @@ void GameState::load()
 {
 	// load all resources
 
+	buffer.create(data.window.getWidth(), data.window.getHeight());
+
 	auto& tm = data.resourceManagers.textureManager;
-
-	const auto& t = tm.get(tm.load(TEXTURE::DEFAULT));
-
+	
+	const auto& placeHolderTexture = tm.get(tm.load(TEXTURE::DEFAULT));
+	const auto& frogTexture = tm.get(tm.load(TEXTURE::FROG_SPRITE_SHEET));
+	
 	tileMap.init({ 100, 100 }, tm);
-
-	e1->init( { 64,64 }, {16,16}, t );
-	e2->init( { 0,0 }, {12,12}, t );
-
+	
+	//           pos       dime      texture             shDime  keyFrameDur
+	e1->init( { 64,64 }, { 16,16 }, frogTexture,		{ 4,8 }, .1f );
+	e2->init( { 64,64 }, { 16,16 }, placeHolderTexture);
+	
 	entities.push_back(e1);
 	entities.push_back(e2);
-
+	
 	data.camera.setPos(e1->getCenterPos());
-
+	
 	data.camera.setFollowingTarget(*e1);
-	data.camera.setState(CameraState::FOLLOWING);
-
+	data.camera.startFollowing();
+	
 	//data.camera.setZoom(.5f);
+
+	//data.camera.setPos({ 74, 49 });
 
 	setLoaded();	// enable the state's "loaded" flag after everything has been loaded
 }
@@ -42,9 +48,9 @@ void GameState::unload()
 void GameState::handleInput()
 {
 	// listen to any keyboard and mouse input to do stuff
-	
-	Keyboard& kb{ data.keyboard };
 
+	Keyboard& kb{ data.keyboard };
+	
 	if (kb.w.isTapped() || kb.w.isHeld())
 		e1->move({ 0, -1 });
 	if (kb.a.isTapped() || kb.a.isHeld())
@@ -53,37 +59,55 @@ void GameState::handleInput()
 		e1->move({ 0, 1 });
 	if (kb.d.isTapped() || kb.d.isHeld())
 		e1->move({ 1, 0 });
-
-	if (kb.space.isTapped())
+	
+	Camera& camera{ data.camera };
+	
+	if (kb.space.isTapped() && !camera.isPanComplete())
 	{
-		data.camera.setState(CameraState::PANNING_EXPONENTIAL);
-		data.camera.panTo({ 0,0 }, 5.f);
+		camera.startPanning( e2->getCenterPos(), 100.f, PanningType::LINEAR);
 	}
-	else if (kb.space.isReleased())
-		data.camera.setState(CameraState::FOLLOWING);
+	if (kb.e.isTapped() && !camera.isPanComplete())
+	{
+		camera.startPanning(e2->getCenterPos(), 0.5f, PanningType::EXPONENTIAL);
+	}
+	else if ((kb.space.isTapped() || kb.e.isTapped()) && camera.isPanComplete())
+	{
+		camera.setPos(e1->getCenterPos());
+		camera.startFollowing();
+	}
 }
 
 void GameState::update(const float dt)
 {
 	// tick everything
 
+	if (p < (data.window.getWidth() * data.window.getHeight()) - 1)
+	{
+		++p;
+		buffer.setPixel(p % data.window.getWidth(), p / data.window.getWidth(), 
+			sf::Color( int(cos(p) * 8960) % 255, int(tan(p) * 379) % 255, int(sin(p) * 2006) % 255
+		));
+	}
+	
+	t.loadFromImage(buffer);
+	s.setTexture(t);
+
 	for (const auto e : entities)
 		e->update(dt);
-
-	//std::cout << e1->getPos().x << ", " << e1->getPos().y << '\n';
-
+	
+	//std::cout << e1->getVel().x << ", " << e1->getVel().y << '\n';
+	
 	if (e1->isColliding(*e2))
 	{
-		std::shared_ptr<Entity> e = std::make_shared<Entity>();
-		auto& tm = data.resourceManagers.textureManager;
-
-		e->init({ entities.back()->getCenterPos().x,0 }, {4,4}, tm.get(TEXTURE::DEFAULT));
-
-		entities.push_back(e);
-
-		//data.camera.panTo({ 369.f, 369.f }, 1.f);
-		//data.camera.setState(CameraState::PANNING_LINEAR);
+		//std::shared_ptr<Entity> e = std::make_shared<Entity>();
+		//auto& tm = data.resourceManagers.textureManager;
 		//
+		//e->init({ entities.back()->getCenterPos().x,0 }, {4,4}, tm.get(TEXTURE::DEFAULT));
+		//
+		//entities.push_back(e);
+	
+		//data.camera.startPanning({ 100.f, 0.f }, 1.f, PanningType::LINEAR);
+		
 		//e1->move({ 1,0 });
 		//e1->setSize({ 32,32 });
 		//
@@ -94,16 +118,18 @@ void GameState::update(const float dt)
 void GameState::render() const
 {
 	// render scene objects and entities and stuff here
-	
+
 	Window& w{ data.window };
 
 	w.beginDraw();
-
+	
 	for (const auto& t : tileMap.getTiles())
 		w.draw(t.getSprite());
-
+	
 	for (const auto e : entities)
 		w.draw(*e, true);
+
+	//w.draw(s);
 
 	w.endDraw();
 }

@@ -9,11 +9,19 @@
 class GameState : public State
 {
 private:
-	TileMap tileMap;
 
+	sf::Image buffer;
+	
+	sf::Texture t;
+	Sprite s;
+	
+	int p{};
+
+	TileMap tileMap;
+	
 	std::shared_ptr<Entity> e1 = std::make_shared<Entity>();
 	std::shared_ptr<Entity> e2 = std::make_shared<Entity>();
-
+	
 	std::vector<std::shared_ptr<Entity>> entities;
 
 public:
