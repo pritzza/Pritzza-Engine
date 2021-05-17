@@ -10,11 +10,13 @@ class GameState : public State
 {
 private:
 
-	sf::Image buffer;
+	//sf::Image buffer;
+	//
+	//sf::Texture t;
+	//Sprite s;
 	
-	sf::Texture t;
-	Sprite s;
-	
+	float time{};
+
 	int p{};
 
 	TileMap tileMap;

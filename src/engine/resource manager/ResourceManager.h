@@ -8,7 +8,8 @@ enum class TEXTURE
 {
 	ERROR,
 	DEFAULT,
-	FROG_SPRITE_SHEET
+	FROG_SPRITE_SHEET,
+	TILES
 };
 enum class FONT
 {
@@ -39,6 +40,7 @@ public:
 		{
 		case TEXTURE::DEFAULT:				return loadFromFile("res/textures/img.png", id);
 		case TEXTURE::FROG_SPRITE_SHEET:	return loadFromFile("res/textures/frog spritesheet.png", id);
+		case TEXTURE::TILES:				return loadFromFile("res/textures/frog game tiles.png", id);
 
 		default:							return loadFromFile("res/textures/richardd.png", id);	// error resource should always be loaded
 		}

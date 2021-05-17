@@ -24,9 +24,9 @@ void Sprite::setTexture(const sf::Texture& t)
 	this->s.setTexture(t);
 }
 
-void Sprite::setDimensions(const sf::Vector2u& d)
+void Sprite::setDimensions(const sf::Vector2u& d, const sf::Vector2u& pos)	// pos optional
 {
-	this->sbox = sf::IntRect(0, 0, d.x, d.y);
+	this->sbox = sf::IntRect(pos.x, pos.y, d.x, d.y);
 	this->s.setTextureRect(sbox);
 }
 

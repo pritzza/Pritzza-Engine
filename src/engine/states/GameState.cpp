@@ -10,18 +10,18 @@ void GameState::load()
 {
 	// load all resources
 
-	buffer.create(data.window.getWidth(), data.window.getHeight());
+	//buffer.create(data.window.getWidth(), data.window.getHeight());
 
 	auto& tm = data.resourceManagers.textureManager;
 	
-	const auto& placeHolderTexture = tm.get(tm.load(TEXTURE::DEFAULT));
+	const auto& tileTexture = tm.get(tm.load(TEXTURE::TILES));
 	const auto& frogTexture = tm.get(tm.load(TEXTURE::FROG_SPRITE_SHEET));
 	
-	tileMap.init({ 100, 100 }, tm);
+	tileMap.init({ 100, 100 }, tileTexture);
 	
 	//           pos       dime      texture             shDime  keyFrameDur
 	e1->init( { 64,64 }, { 16,16 }, frogTexture,		{ 4,8 }, .1f );
-	e2->init( { 64,64 }, { 16,16 }, placeHolderTexture);
+	e2->init( { 64,64 }, { 16,16 }, frogTexture,		{ 4,8 }, .1f );
 	
 	entities.push_back(e1);
 	entities.push_back(e2);
@@ -81,16 +81,21 @@ void GameState::update(const float dt)
 {
 	// tick everything
 
-	if (p < (data.window.getWidth() * data.window.getHeight()) - 1)
-	{
-		++p;
-		buffer.setPixel(p % data.window.getWidth(), p / data.window.getWidth(), 
-			sf::Color( int(cos(p) * 8960) % 255, int(tan(p) * 379) % 255, int(sin(p) * 2006) % 255
-		));
-	}
-	
-	t.loadFromImage(buffer);
-	s.setTexture(t);
+	// cellular automata stuff
+	//if (p < (data.window.getWidth() * data.window.getHeight()) - 1)
+	//{
+	//	++p;
+	//	buffer.setPixel(p % data.window.getWidth(), p / data.window.getWidth(), 
+	//		sf::Color( int(cos(p) * 8960) % 255, int(tan(p) * 379) % 255, int(sin(p) * 2006) % 255
+	//	));
+	//}
+	//
+	//t.loadFromImage(buffer);
+	//s.setTexture(t);
+
+	this->time += dt;// *3.f;
+
+	e2->move({ cosf(time * 2) / 5.f, sinf(time * 2) / 5.f });
 
 	for (const auto e : entities)
 		e->update(dt);
