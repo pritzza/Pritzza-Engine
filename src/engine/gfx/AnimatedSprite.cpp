@@ -4,7 +4,7 @@
 
 #include "../util/Direction.h"
 
-AnimatedSprite::AnimatedSprite(const sf::Vector2f& pos, const sf::Vector2u& dimensions, const sf::Texture& texture)
+AnimatedSprite::AnimatedSprite(const sf::Vector2f& pos, const sf::Vector2i& dimensions, const sf::Texture& texture)
 	:
 	Sprite(pos, dimensions, texture)
 {
@@ -12,9 +12,9 @@ AnimatedSprite::AnimatedSprite(const sf::Vector2f& pos, const sf::Vector2u& dime
 
 AnimatedSprite::AnimatedSprite(
 	const sf::Vector2f& pos, 
-	const sf::Vector2u& dimensions, 
+	const sf::Vector2i& dimensions, 
 	const sf::Texture& texture, 
-	const sf::Vector2u shDimensions, 
+	const sf::Vector2i shDimensions, 
 	const float maxFrameDur)
 	:
 	Sprite(pos, dimensions, texture)
@@ -41,34 +41,44 @@ void AnimatedSprite::updateCrop()
 
 void AnimatedSprite::updateFrame(const float dt)
 {
-	keyFrameCounter += dt;
+	frameCounter += dt;
 
-	if (keyFrameCounter >= keyFrameMaxDuration)
+	if (frameCounter >= frameDuration)
 	{
-		keyFrameCounter = 0.f;
+		frameCounter -= frameDuration;
 
-		if (isSnapBackAnimation)
-		{
-			// logic for going from animation frame 0, 1, 2, ... n-2, n-1, n, 0, 1, 2
-			++currentSpriteTile.x;
-
-			if (currentSpriteTile.x >= spriteSheetTileDimensions.x)
-				currentSpriteTile.x %= spriteSheetTileDimensions.x;
-		}
+		if (animationCycleType == AnimationCycleType::JUMP_BACK)
+			this->updateFrameJumpingBack();
 		else
-		{
-			// logic for going from animation frame 0, 1, 2, ... n-1, n, n-1, ... 2, 1, 0
-			if (currentSpriteTile.x >= spriteSheetTileDimensions.x - 1)
-				isFrameDirectionForward = false;
-			else if (currentSpriteTile.x == 0)	// unsigned int < 0 doesnt exist because of integer underflow (must be == 0)
-				isFrameDirectionForward = true;
-
-			if (isFrameDirectionForward)
-				++currentSpriteTile.x;
-			else
-				--currentSpriteTile.x;
-		}
+			this->updateFrameOscillating();
 	}
+}
+
+// logic for going from animation frame 0, 1, 2, ... n-2, n-1, n, 0, 1, 2
+void AnimatedSprite::updateFrameJumpingBack()
+{
+	++currentSpriteTile.x;
+
+	if (currentSpriteTile.x >= spriteSheetTileDimensions.x)
+		currentSpriteTile.x %= spriteSheetTileDimensions.x;
+}
+
+// logic for going from animation frame 0, 1, 2, ... n-1, n, n-1, ... 2, 1, 0
+void AnimatedSprite::updateFrameOscillating()
+{
+	if (currentSpriteTile.x >= spriteSheetTileDimensions.x - 1)
+	{
+		oscillationalDirection = OscillationalDirection::FORWARD;
+	}
+	else if (currentSpriteTile.x == 0)	// unsigned int < 0 doesnt exist because of integer underflow (must be == 0)
+	{
+		oscillationalDirection = OscillationalDirection::BACKWARD;
+	}
+
+	if (oscillationalDirection == OscillationalDirection::FORWARD)
+		++currentSpriteTile.x;
+	else
+		--currentSpriteTile.x;
 }
 
 void AnimatedSprite::updateAnimationState(const Direction& dir, const bool isMoving)
@@ -99,6 +109,7 @@ void AnimatedSprite::update(const sf::Vector2f& pos, const float dt, const Direc
 {
 	this->setSpritePos(pos);
 
+	// only call AnimatedSprite methods if it has been initialzied as a fully fledged AnimatedSprite (need to refactor)
 	if (this->isAnimated)
 	{
 		this->updateAnimationState(dir, isMoving);
@@ -107,24 +118,10 @@ void AnimatedSprite::update(const sf::Vector2f& pos, const float dt, const Direc
 	}
 }
 
-void AnimatedSprite::setAnimationState(const AnimationState state)
-{
-	switch (state)
-	{
-	case AnimationState::IDLE_UP:		currentSpriteTile.y = 0;	break;
-	case AnimationState::IDLE_LEFT:		currentSpriteTile.y = 1;	break;
-	case AnimationState::IDLE_RIGHT:	currentSpriteTile.y = 2;	break;
-	case AnimationState::IDLE_DOWN:		currentSpriteTile.y = 3;	break;
-
-	case AnimationState::MOVING_UP:		currentSpriteTile.y = 4;	break;
-	case AnimationState::MOVING_LEFT:	currentSpriteTile.y = 5;	break;
-	case AnimationState::MOVING_RIGHT:	currentSpriteTile.y = 6;	break;
-	case AnimationState::MOVING_DOWN:	currentSpriteTile.y = 7;	break;
-	}
-}
-
-void AnimatedSprite::setSpriteSheetDimensions(const sf::Vector2u dimensions) { this->spriteSheetTileDimensions = dimensions;	}
-void AnimatedSprite::setKeyFrameMaxDuration(const float duration)			 { this->keyFrameMaxDuration = duration;			}
-void AnimatedSprite::setIsAnimated(const bool isAnimated)					 { this->isAnimated = isAnimated;					}
+void AnimatedSprite::setAnimationState(const AnimationState state)			 { this->currentSpriteTile.y = static_cast<int>(state); }
+void AnimatedSprite::setSpriteSheetDimensions(const sf::Vector2i dimensions) { this->spriteSheetTileDimensions = dimensions;		}
+void AnimatedSprite::setKeyFrameMaxDuration(const float duration)			 { this->frameDuration = duration;						}
+void AnimatedSprite::setAnimationCycleType(const AnimationCycleType type)	 { this->animationCycleType = type;						}
+void AnimatedSprite::setIsAnimated(const bool isAnimated)					 { this->isAnimated = isAnimated;						}
 
 const AnimationState AnimatedSprite::getAnimationState() const { return this-> animationState; }

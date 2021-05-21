@@ -12,15 +12,15 @@ protected:
 	AnimatedSprite sprite;
 
 public:
-	virtual void init(const sf::Vector2f& pos, const sf::Vector2u& dimensions);
-	virtual void init(const sf::Vector2f& pos, const sf::Vector2u& dimensions, const sf::Texture& t);
-	virtual void init(const sf::Vector2f& pos, const sf::Vector2u& dimensions, const sf::Texture& t, const sf::Vector2u& shDimensions, const float maxFrameDur);
+	virtual void init(const sf::Vector2f& pos, const sf::Vector2i& dimensions);
+	virtual void init(const sf::Vector2f& pos, const sf::Vector2i& dimensions, const sf::Texture& t);
+	virtual void init(const sf::Vector2f& pos, const sf::Vector2i& dimensions, const sf::Texture& t, const sf::Vector2i& shDimensions, const float maxFrameDur);
 
 	virtual void update(const float dt);
 
 	const bool isColliding(const GameObject& e) const;
 
-	void setSize(const sf::Vector2u& size);
+	void setSize(const sf::Vector2i& size);
 	void setPos(const sf::Vector2f pos);
 	void setTexture(const sf::Texture& texture);
 

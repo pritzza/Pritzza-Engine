@@ -15,15 +15,16 @@ protected:
 
 public:
 	Sprite() {};
-	Sprite(const sf::Vector2f& pos, const sf::Vector2u& dimensions, const sf::Texture& texture);
+	Sprite(const sf::Vector2f& pos, const sf::Vector2i& dimensions, const sf::Texture& texture, const sf::Color& debugColor = { 0,0,0,0 });
 
 	virtual void update(const sf::Vector2f& pos, const float dt, const Direction& dir, const bool isMoving);	// dt set to 0 so non animated sprites dont require dt
 
 	void setTexture(const sf::Texture& texture);
-	void setDimensions(const sf::Vector2u& dimensions, const sf::Vector2u& pos = { 0,0 });
+	void setCrop(const sf::Vector2i& dimensions, const sf::Vector2i& pos = { 0,0 });
 
 	const sf::Vector2f& getPos() const;
 	const sf::Vector2i& getDimensions() const;
 
 	const sf::Sprite& getSprite() const;
+	sf::Sprite& getSprite();
 };

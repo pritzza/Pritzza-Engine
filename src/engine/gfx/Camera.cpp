@@ -21,6 +21,12 @@ void Camera::update(const float dt)
 {
 	//std::cout << "(" << pos.x << " + " << vel.x << ", " << pos.y << " + " << vel.y << ") zoom: " << zoom << '\n';
 
+	if (this->tempZoom != this->NULL_ZOOM_VALUE)
+	{
+		this->zoom = tempZoom;
+		tempZoom = this->NULL_ZOOM_VALUE;
+	}
+
 	this->updatePos(dt);
 
 	this->view.setSize(WINDOW_WIDTH / zoom, WINDOW_HEIGHT / zoom);
@@ -95,7 +101,7 @@ const bool Camera::nearingFocusPoint() const
 }
 
 /*************************/
-/*    PRIVATE METHODS    */
+/*    PUBLIC* METHODS    */
 /*************************/
 
 void Camera::startPanning(const sf::Vector2f& pos, const float smoothness, const PanningType pt)
@@ -139,7 +145,7 @@ const bool Camera::isInView(const Sprite& s) const
 
 void Camera::addZoom(const float addend)		{ this->zoom += addend; }
 void Camera::multiplyZoom(const float factor)	{ this->zoom *= factor; }
-void Camera::setZoom(const float zoom)			{ this->zoom = zoom;	}
+void Camera::setZoom(const float zoom) { this->tempZoom = zoom;	std::cout << "SET ZOOM\n\n"; }
 
 void Camera::move(const sf::Vector2f& vel)		{ this->vel.x = vel.x;	this->vel.y = vel.y; }
 void Camera::setPos(const sf::Vector2f& pos)	{ this->pos.x = pos.x;	this->pos.y = pos.y; }

@@ -23,4 +23,9 @@ private:
 	const sf::Vector2u spriteDimensions;
 	const sf::Vector2u spriteSheetDimenions;
 	const std::vector<int> keyFrameDurations;
+
+	const std::vector<sf::IntRect> hitBoxes;
+
+public:
+
 };

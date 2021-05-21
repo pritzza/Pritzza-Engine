@@ -35,6 +35,9 @@ private:
 	sf::Vector2f vel{};
 	float zoom{ 1.f };
 
+	const float NULL_ZOOM_VALUE{ -1.f };	// arbitrary value to say there isnt any tempZoom value we need to assign to zoom
+	float tempZoom{ this->NULL_ZOOM_VALUE };
+
 	CameraState activeState{ CameraState::STATIC };
 	CameraState defaultState{ CameraState::FOLLOWING };
 

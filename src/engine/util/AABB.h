@@ -18,7 +18,7 @@ public:
 
 	bool isColliding(const AABB& target) const;
 
-	void setDimensions(const sf::Vector2u dimensions);
+	void setDimensions(const sf::Vector2i dimensions);
 
 	const sf::Vector2f& getPos() const;
 	const sf::IntRect& getBox() const;

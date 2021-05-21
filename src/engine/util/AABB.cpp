@@ -39,7 +39,7 @@ bool AABB::isColliding(const AABB& target) const
 		);
 }
 
-void AABB::setDimensions(const sf::Vector2u d)
+void AABB::setDimensions(const sf::Vector2i d)
 {
 	this->cbox = sf::IntRect(0, 0, d.x, d.y);
 	this->rect.setSize( {static_cast<float>(d.x), static_cast<float>(d.y) } );

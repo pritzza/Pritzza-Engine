@@ -9,7 +9,7 @@ class Entity;
 class Window
 {
 private:
-	sf::RenderWindow window;
+	sf::RenderWindow renderWindow;
 
 	const Camera& camera;
 

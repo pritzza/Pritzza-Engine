@@ -4,9 +4,9 @@
 #include "../gfx/Sprite.h"
 #include "../game objects/Entity.h"
 
-Window::Window(const Camera& camera, const std::string& windowName, const unsigned int width, const unsigned int height, const unsigned int size)
+Window::Window(const Camera& camera, const std::string& renderWindowName, const unsigned int width, const unsigned int height, const unsigned int size)
 	:
-	window(sf::VideoMode(width * size, height * size), windowName),
+	renderWindow(sf::VideoMode(width * size, height * size), renderWindowName),
 	camera{ camera },
 	WIDTH{ width },
 	HEIGHT{ height },
@@ -15,14 +15,14 @@ Window::Window(const Camera& camera, const std::string& windowName, const unsign
 
 void Window::update()
 {
-	this->window.setView(camera.getView());
+	this->renderWindow.setView(camera.getView());
 
 	sf::Event event;
 
-	if (this->window.pollEvent(event))
+	if (this->renderWindow.pollEvent(event))
 		switch (event.type)
 		{
-		case sf::Event::Closed:			this->window.close();			break;
+		case sf::Event::Closed:			this->renderWindow.close();			break;
 		case sf::Event::GainedFocus:	this->focused = true;	break;
 		case sf::Event::LostFocus:		this->focused = false;	break;
 		}
@@ -30,34 +30,36 @@ void Window::update()
 
 void Window::beginDraw()
 {
-	this->window.clear(sf::Color(1, 69, 13));
+	this->renderWindow.clear(sf::Color(1, 69, 13));
 }
 
 void Window::endDraw()
 {
-	this->window.display();
+	this->renderWindow.display();
 }
 
 void Window::draw(const Sprite& sprite)
 {
 	if (camera.isInView(sprite))
-		this->window.draw(sprite.getSprite());
-}
+	{
+		this->renderWindow.draw(sprite.getSprite());
+	}
+	}
 
 void Window::draw(Entity& entity, const bool drawBounds)
 {
 	if (camera.isInView(entity.getSprite()))
 	{
-		this->window.draw(entity.getSFSprite());
+		this->renderWindow.draw(entity.getSFSprite());
 
 		if (drawBounds)
-			this->window.draw(entity.getRect());
+			this->renderWindow.draw(entity.getRect());
 	}
 }
 
-sf::RenderWindow& Window::getWindow() { return this->window;	}
+sf::RenderWindow& Window::getWindow() { return this->renderWindow;	}
 
-const bool Window::isOpen() const	  { return window.isOpen(); }
+const bool Window::isOpen() const	  { return renderWindow.isOpen(); }
 const bool Window::isFocused() const  { return this->focused;   }
 
 const unsigned int Window::getWidth()  const		{ return WIDTH;		  }

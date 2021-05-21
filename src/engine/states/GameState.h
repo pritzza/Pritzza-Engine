@@ -6,6 +6,8 @@
 
 #include "../levels/TileMap.h"
 
+#include "SFML/Audio.hpp"
+
 class GameState : public State
 {
 private:
@@ -14,7 +16,11 @@ private:
 	//
 	//sf::Texture t;
 	//Sprite s;
-	
+
+	sf::Sound bgm;
+
+	bool isZoomedIn{ false };
+
 	float time{};
 
 	int p{};

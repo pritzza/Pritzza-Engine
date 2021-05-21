@@ -20,9 +20,9 @@ private:
 	void updateDirection(const sf::Vector2f& v);
 
 public:
-	virtual void init(const sf::Vector2f& pos, const sf::Vector2u& dimensions);
-	virtual void init(const sf::Vector2f& pos, const sf::Vector2u& dimensions, const sf::Texture& t);
-	virtual void init(const sf::Vector2f& pos, const sf::Vector2u& dimensions, const sf::Texture& t, const sf::Vector2u& shDimensions, const float maxFrameDur);
+	virtual void init(const sf::Vector2f& pos, const sf::Vector2i& dimensions);
+	virtual void init(const sf::Vector2f& pos, const sf::Vector2i& dimensions, const sf::Texture& t);
+	virtual void init(const sf::Vector2f& pos, const sf::Vector2i& dimensions, const sf::Texture& t, const sf::Vector2i& shDimensions, const float maxFrameDur);
 
 	virtual void update(const float dt);
 

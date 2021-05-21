@@ -9,14 +9,21 @@ enum class TEXTURE
 	ERROR,
 	DEFAULT,
 	FROG_SPRITE_SHEET,
-	TILES
+	SNAIL_SPRITE_SHEET,
+	TILES,
+	TILES_ISOMETRIC
 };
 enum class FONT
 {
 	ERROR,
 	DEFAULT
 };
-enum class AUDIO
+enum class SOUND
+{
+	ERROR,
+	DEFAULT
+};
+enum class MUSIC
 {
 	ERROR,
 	DEFAULT
@@ -25,8 +32,28 @@ enum class AUDIO
 template <class Key, class Resource>
 class ResourceManager
 {
-private:
+protected:
 	std::unordered_map<Key, Resource> resources;
+
+protected:
+	virtual const Key loadFromFile(const std::string& fileName, const Key resID)
+	{
+		if (this->resources.find(resID) == resources.end())	// res not already loaded
+		{
+			Resource res;
+
+			if (res.loadFromFile(fileName))	// if loaded sucessfully, insert and return id
+			{
+				// shout out to Herrad for his hard work debugging my terrible code
+				this->resources.insert({ resID, res });
+				return resID;
+			}
+			else // if couldnt find file, return default id
+				return Key::DEFAULT;
+		}
+
+		return resID;	// if already loaded, do nothing and return id
+	}
 
 public:
 	ResourceManager()
@@ -40,7 +67,9 @@ public:
 		{
 		case TEXTURE::DEFAULT:				return loadFromFile("res/textures/img.png", id);
 		case TEXTURE::FROG_SPRITE_SHEET:	return loadFromFile("res/textures/frog spritesheet.png", id);
+		case TEXTURE::SNAIL_SPRITE_SHEET:	return loadFromFile("res/textures/snail sprite sheet.png", id);
 		case TEXTURE::TILES:				return loadFromFile("res/textures/frog game tiles.png", id);
+		case TEXTURE::TILES_ISOMETRIC:		return loadFromFile("res/textures/frog game tiles ISOMETRIC.png", id);
 
 		default:							return loadFromFile("res/textures/richardd.png", id);	// error resource should always be loaded
 		}
@@ -56,12 +85,22 @@ public:
 		}
 	}
 
-	const Key load(const AUDIO id)
+	const Key load(const SOUND id)
 	{
 		switch (id)
 		{
-		case AUDIO::DEFAULT:	return loadFromFile("res/audio/170- Earthbound - OK _Ssuka_.mp3", id);
+		case SOUND::DEFAULT:	return loadFromFile("res/audio/170- Earthbound - OK _Ssuka_.mp3", id);
 		
+		default:				return loadFromFile("res/audio/001- EarthBound - Burp.mp3", id);	// error resource should always be loaded
+		}
+	}
+
+	const Key load(const MUSIC id)
+	{
+		switch (id)
+		{
+		case MUSIC::DEFAULT:	return loadFromFile("res/audio/170- Earthbound - OK _Ssuka_.mp3", id);
+
 		default:				return loadFromFile("res/audio/001- EarthBound - Burp.mp3", id);	// error resource should always be loaded
 		}
 	}
@@ -77,24 +116,5 @@ public:
 			return resources.at(id);
 
 		return resources.at(Key::ERROR);
-	}
-
-private:
-	const Key loadFromFile(const std::string& fileName, const Key resID)
-	{
-		if (this->resources.find(resID) == resources.end())	// res not already loaded
-		{
-			Resource res;
-
-			if (res.loadFromFile(fileName))	// if loaded sucessfully, insert and return id
-			{
-				this->resources.insert({ resID, res });
-				return resID;
-			}
-			else // if couldnt find file, return default id
-				return Key::DEFAULT;
-		}
-
-		return resID;	// if already loaded, do nothing and return id
 	}
 };

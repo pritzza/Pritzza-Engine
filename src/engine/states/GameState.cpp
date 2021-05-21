@@ -12,29 +12,51 @@ void GameState::load()
 
 	//buffer.create(data.window.getWidth(), data.window.getHeight());
 
+	//// LOADING RESOURCES
+
+	// LOADING TEXTURES
 	auto& tm = data.resourceManagers.textureManager;
 	
-	const auto& tileTexture = tm.get(tm.load(TEXTURE::TILES));
+	const auto& tileTexture = tm.get(tm.load(TEXTURE::TILES_ISOMETRIC));
 	const auto& frogTexture = tm.get(tm.load(TEXTURE::FROG_SPRITE_SHEET));
+	const auto& snailTexture = tm.get(tm.load(TEXTURE::SNAIL_SPRITE_SHEET));
 	
-	tileMap.init({ 100, 100 }, tileTexture);
+	// LOADING AUDIO
+
+	//auto& am = data.resourceManagers.audioManager;
+
+	//const auto& bgmAudio = am.get(am.load(AUDIO::RATS_IN_WATER_SONG));
+
+	// INITIALIZEING MAP
+	constexpr int LEVEL_WIDTH{ 200 };
+	constexpr int LEVEL_HEIGHT{ 200 };
+
+	tileMap.init({ LEVEL_WIDTH, LEVEL_HEIGHT }, tileTexture);
 	
+	// INITIALIZING ENTITIES
 	//           pos       dime      texture             shDime  keyFrameDur
-	e1->init( { 64,64 }, { 16,16 }, frogTexture,		{ 4,8 }, .1f );
+	e1->init( { 64,64 }, { 16,16 }, snailTexture,		{ 4,8 }, .2f );
 	e2->init( { 64,64 }, { 16,16 }, frogTexture,		{ 4,8 }, .1f );
 	
 	entities.push_back(e1);
 	entities.push_back(e2);
 	
-	data.camera.setPos(e1->getCenterPos());
-	
-	data.camera.setFollowingTarget(*e1);
-	data.camera.startFollowing();
-	
-	//data.camera.setZoom(.5f);
+	// INITIALIZING CAMERA
+
+	Camera& c{ data.camera };
+
+	c.setPos(e1->getCenterPos());
+	c.setFollowingTarget(*e1);
+	c.startFollowing();
 
 	//data.camera.setPos({ 74, 49 });
 
+	// INITIALIZING AUDIO
+
+	//bgm.setBuffer(bgmAudio);
+	//bgm.play();
+
+	// FINISHING
 	setLoaded();	// enable the state's "loaded" flag after everything has been loaded
 }
 
@@ -64,14 +86,30 @@ void GameState::handleInput()
 	
 	if (kb.space.isTapped() && !camera.isPanComplete())
 	{
-		camera.startPanning( e2->getCenterPos(), 100.f, PanningType::LINEAR);
+		// pan linearly
+		//camera.startPanning( e2->getCenterPos(), 100.f, PanningType::LINEAR);
+
+		if (isZoomedIn)
+		{
+			camera.setZoom(1);
+			isZoomedIn = false;
+		}
+		else
+		{
+			camera.setZoom(4);
+			isZoomedIn = true;
+		}
 	}
 	if (kb.e.isTapped() && !camera.isPanComplete())
 	{
-		camera.startPanning(e2->getCenterPos(), 0.5f, PanningType::EXPONENTIAL);
+		// pan exponentially
+		//camera.startPanning(e2->getCenterPos(), 0.5f, PanningType::EXPONENTIAL);
+
+		tileMap.init({ 100, 100 }, data.resourceManagers.textureManager.get(TEXTURE::TILES_ISOMETRIC));
 	}
 	else if ((kb.space.isTapped() || kb.e.isTapped()) && camera.isPanComplete())
 	{
+		// reset camera back to e1
 		camera.setPos(e1->getCenterPos());
 		camera.startFollowing();
 	}
@@ -131,7 +169,7 @@ void GameState::render() const
 	for (const auto& t : tileMap.getTiles())
 		w.draw(t.getSprite());
 	
-	for (const auto e : entities)
+	for (const auto& e : entities)
 		w.draw(*e, true);
 
 	//w.draw(s);

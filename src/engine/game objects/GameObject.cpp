@@ -2,14 +2,14 @@
 
 #include "../util/Direction.h"
 
-void GameObject::init(const sf::Vector2f& pos, const sf::Vector2u& dimensions)
+void GameObject::init(const sf::Vector2f& pos, const sf::Vector2i& dimensions)
 {
 	this->pos = pos;
 
 	this->setSize(dimensions);
 }
 
-void GameObject::init(const sf::Vector2f& pos, const sf::Vector2u& dimensions, const sf::Texture& t)
+void GameObject::init(const sf::Vector2f& pos, const sf::Vector2i& dimensions, const sf::Texture& t)
 {
 	this->pos = pos;
 
@@ -17,7 +17,7 @@ void GameObject::init(const sf::Vector2f& pos, const sf::Vector2u& dimensions, c
 	this->setTexture(t);
 }
 
-void GameObject::init(const sf::Vector2f& pos, const sf::Vector2u& dimensions, const sf::Texture& t, const sf::Vector2u& shDimensions, const float maxFrameDur)
+void GameObject::init(const sf::Vector2f& pos, const sf::Vector2i& dimensions, const sf::Texture& t, const sf::Vector2i& shDimensions, const float maxFrameDur)
 {
 	this->pos = pos;
 
@@ -40,10 +40,10 @@ const bool GameObject::isColliding(const GameObject& e) const
 	return this->box.isColliding(e.getAABB());
 }
 
-void GameObject::setSize(const sf::Vector2u& d)
+void GameObject::setSize(const sf::Vector2i& d)
 {
 	this->box.setDimensions(d);
-	this->sprite.setDimensions(d);
+	this->sprite.setCrop(d);
 }
 
 void GameObject::setTexture(const sf::Texture& texture)	 { this->sprite.setTexture(texture); }

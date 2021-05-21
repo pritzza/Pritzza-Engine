@@ -8,6 +8,7 @@
 struct ResourceManagers
 {
 	ResourceManager<TEXTURE, sf::Texture> textureManager;
-	//ResourceManager<FONT, sf::Font> fontManager;
-	//ResourceManager<AUDIO, sf::SoundBuffer> soundManager;
+	ResourceManager<SOUND, sf::SoundBuffer> soundManager;
+	ResourceManager<FONT, sf::Font> fontManager;
+	//ResourceManager<MUSIC, sf::Music> musicManager; //curse you sf::Music
 };

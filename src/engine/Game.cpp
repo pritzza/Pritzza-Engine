@@ -19,7 +19,7 @@ void Game::gameLoop()
 
 	while (isRunning())
 	{
-		clock.restart();	
+		frameTimer.restart();	
 
 		data.stateMachine.processChanges();
 
@@ -43,10 +43,10 @@ void Game::gameLoop()
 			data.stateMachine.currentState()->render();
 		}
 
-		dt = clock.getElapsedTime().asSeconds();	// processing time before wait
+		dt = frameTimer.getElapsedTime().asSeconds();	// processing time before wait
 		sf::sleep(sf::seconds(1.f / FRAME_RATE - dt));
 
-		dt = clock.getElapsedTime().asSeconds();	// total time (use this for dt calculations)
+		dt = frameTimer.getElapsedTime().asSeconds();	// total time (use this for dt calculations)
 	}
 }
 

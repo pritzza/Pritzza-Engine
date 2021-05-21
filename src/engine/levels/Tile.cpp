@@ -1,26 +1,61 @@
 #include "Tile.h"
 
-void Tile::init(const bool solid, const int i, const unsigned int w, const sf::Texture& t, const Tiles tileType)
+#include <iostream>
+
+void Tile::init(const TileType tileType, const int elevation, const int i, const unsigned int w, const sf::Texture& texture)
 {
-	this->solid = solid;
+	this->tileType = tileType;
+	this->elevation = elevation;
 
-	const sf::Vector2f pos = sf::Vector2f((i % w) * LENGTH, (i / w) * LENGTH);
-	const sf::Vector2u dimensions{ LENGTH, LENGTH };
+	this->initSprite(i, w, texture);
 
-	sf::Vector2u spriteDisplacement;
+	this->setTileType(tileType);
+}
+
+void Tile::initSprite(const int i, const unsigned int w, const sf::Texture& t)
+{
+	//const sf::Vector2f pos = sf::Vector2f(
+	//	( (i % w) * WIDTH ),
+	//	( (i / w) * HEIGHT)
+	//	);
+
+	const int x = i % w;
+	const int y = i / w;
+
+	const sf::Vector2f pos = sf::Vector2f(
+		(x - y) * (WIDTH  / 2),
+		(x + y) * (HEIGHT / 2) - this->elevation
+	);
+
+	const sf::Vector2i dimensions{ WIDTH, HEIGHT };
+
+	this->sprite = Sprite(pos, dimensions, t);
+}
+
+void Tile::setTileType(const TileType tileType)
+{
+	this->tileType = tileType;
+
+	const sf::Vector2i dimensions{ WIDTH, HEIGHT };
+
+	sf::Vector2i spriteDisplacement;
 
 	switch (tileType)
 	{
-		case Tiles::GRASS:	spriteDisplacement = { 0 * LENGTH, 0 * LENGTH };	break;
-		case Tiles::WATER:	spriteDisplacement = { 1 * LENGTH, 0 * LENGTH };	break;
-		case Tiles::LILY:	spriteDisplacement = { 0 * LENGTH, 1 * LENGTH };	break;
-		case Tiles::LOG:	spriteDisplacement = { 1 * LENGTH, 1 * LENGTH };	break;
+	case TileType::GRASS:		spriteDisplacement = { GRASS_X	  * WIDTH,		 GRASS_X    * HEIGHT };		break;
+	case TileType::WATER:		spriteDisplacement = { WATER_X    * WIDTH,		 WATER_Y    * HEIGHT };		break;
+	case TileType::SAND:		spriteDisplacement = { SAND_X     * WIDTH,		 SAND_Y     * HEIGHT };		break;
+	case TileType::BUSH:		spriteDisplacement = { BUSH_X     * WIDTH,		 BUSH_Y     * HEIGHT };		break;
+	case TileType::WEIRD:		spriteDisplacement = { WEIRD_X    * WIDTH, 		 WEIRD_Y    * HEIGHT };		break;
+	case TileType::MOUNTAIN:	spriteDisplacement = { MOUNTAIN_X * WIDTH,		 MOUNTAIN_Y * HEIGHT };		break;
 	}
 
-	this->sprite = Sprite(pos, dimensions, t);
-	this->sprite.setDimensions(dimensions, spriteDisplacement);
+	this->sprite.setCrop(dimensions, spriteDisplacement);
 }
 
-constexpr unsigned int Tile::getLength() const  { return this->LENGTH; }
+void Tile::setBushID(const int id) { this->bushID = id; }
 
-const Sprite& Tile::getSprite() const			{ return this->sprite; }
+const TileType Tile::getTileType() const		{ return this->tileType;				}
+const int Tile::getBushID() const				{ return this->bushID;					}
+const sf::Vector2i& Tile::getDimensions() const { return sf::Vector2i{ WIDTH, HEIGHT }; }
+const Sprite& Tile::getSprite() const			{ return this->sprite;					}

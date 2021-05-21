@@ -7,7 +7,7 @@ class Game
 private:
 	GameData data;
 
-	sf::Clock clock;
+	sf::Clock frameTimer;
 	const unsigned int FRAME_RATE;
 
 private:
