@@ -12,6 +12,7 @@ protected:
 	AnimatedSprite sprite;
 
 public:
+	// needs refactor
 	virtual void init(const sf::Vector2f& pos, const sf::Vector2i& dimensions);
 	virtual void init(const sf::Vector2f& pos, const sf::Vector2i& dimensions, const sf::Texture& t);
 	virtual void init(const sf::Vector2f& pos, const sf::Vector2i& dimensions, const sf::Texture& t, const sf::Vector2i& shDimensions, const float maxFrameDur);

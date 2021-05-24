@@ -3,10 +3,6 @@
 #include "../gfx/Sprite.h"
 #include "../game objects/Entity.h"
 
-#include <iostream>
-
-#include <cmath>
-
 Camera::Camera(const unsigned int WINDOW_WIDTH, const unsigned int WINDOW_HEIGHT)
 	:
 	WINDOW_WIDTH{ WINDOW_WIDTH },
@@ -19,14 +15,6 @@ Camera::Camera(const unsigned int WINDOW_WIDTH, const unsigned int WINDOW_HEIGHT
 
 void Camera::update(const float dt)
 {
-	//std::cout << "(" << pos.x << " + " << vel.x << ", " << pos.y << " + " << vel.y << ") zoom: " << zoom << '\n';
-
-	if (this->tempZoom != this->NULL_ZOOM_VALUE)
-	{
-		this->zoom = tempZoom;
-		tempZoom = this->NULL_ZOOM_VALUE;
-	}
-
 	this->updatePos(dt);
 
 	this->view.setSize(WINDOW_WIDTH / zoom, WINDOW_HEIGHT / zoom);
@@ -41,7 +29,10 @@ void Camera::updatePos(const float dt)
 	}
 
 	if (ROUND_CAMERA_POS)
-		this->view.setCenter(static_cast<int>(pos.x), static_cast<int>(pos.y));
+		this->view.setCenter(
+			static_cast<int>(pos.x), 
+			static_cast<int>(pos.y)
+		);
 	else
 		this->view.setCenter(pos.x, pos.y);
 }
@@ -50,20 +41,22 @@ void Camera::pan(const float dt)
 {
 	/* Thanks DeKrain for helping me with linear panning */
 
-	// Ideally this should be done once and then result saved
-	const sf::Vector2f displacement{ focusPoint.x - pos.x, focusPoint.y - pos.y };
+	updatePanDisplacement();
 
-	const float distance = std::hypot(displacement.x, displacement.y); // Hehe, shortcut for sqrt(displacement.x * displacement.x + displacement.y * displacement.y)
+	const float distance = std::hypot(panDisplacement.x, panDisplacement.y); // Hehe, shortcut for sqrt(displacement.x * displacement.x + displacement.y * displacement.y)
 
-	if (!this->panComplete)
+	if (!panComplete)
 	{
 		if (this->panningType == PanningType::LINEAR)
-			this->vel = displacement * (panningSpeed / distance);
+		{
+			this->vel = panDisplacement * (panningSpeed / distance);
+		}
 		else if (this->panningType == PanningType::EXPONENTIAL)
-			this->vel = displacement / panningSpeed;
+		{
+			this->vel = panDisplacement / panningSpeed;
+		}
 
 		this->vel *= dt;
-
 		this->pos += this->vel;
 	}
 
@@ -77,16 +70,18 @@ void Camera::pan(const float dt)
 		this->setPos(focusPoint);
 		this->vel = { 0,0 };
 	}
-
-	//std::cout << "panning...\n";
 }
 
 void Camera::follow()
 {
 	if (this->target != nullptr)
 		this->pos = this->target->getCenterPos();
-	
-	//std::cout << "following...\n";
+}
+
+void Camera::updatePanDisplacement()
+{
+	this->panDisplacement.x = this->focusPoint.x - this->pos.x;
+	this->panDisplacement.y = this->focusPoint.y - this->pos.y;
 }
 
 const bool Camera::passingFocusPoint() const
@@ -143,9 +138,9 @@ const bool Camera::isInView(const Sprite& s) const
 		 (sy <= y && sy + sh >= y + h));
 }
 
-void Camera::addZoom(const float addend)		{ this->zoom += addend; }
-void Camera::multiplyZoom(const float factor)	{ this->zoom *= factor; }
-void Camera::setZoom(const float zoom) { this->tempZoom = zoom;	std::cout << "SET ZOOM\n\n"; }
+void Camera::addZoom(const float addend)		{ this->zoom += addend;  }
+void Camera::multiplyZoom(const float factor)	{ this->zoom *= factor;  }
+void Camera::setZoom(const float zoom)			{ this->zoom = zoom; }
 
 void Camera::move(const sf::Vector2f& vel)		{ this->vel.x = vel.x;	this->vel.y = vel.y; }
 void Camera::setPos(const sf::Vector2f& pos)	{ this->pos.x = pos.x;	this->pos.y = pos.y; }

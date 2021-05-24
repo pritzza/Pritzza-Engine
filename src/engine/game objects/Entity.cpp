@@ -1,14 +1,14 @@
 #include "Entity.h"
 
-#include <iostream>
 #include <math.h>
 
+// needs refactor
 void Entity::init(const sf::Vector2f& pos, const sf::Vector2i& dimensions)
 {
 	this->pos = pos;
 	this->vel = sf::Vector2f(0, 0);
-	this->acc = sf::Vector2f(30.f, 30.f);
-	
+	this->acc = sf::Vector2f(1, 1);
+
 	this->setSize(dimensions);
 }
 
@@ -39,7 +39,7 @@ void Entity::init(const sf::Vector2f& pos, const sf::Vector2i& dimensions, const
 void Entity::update(const float dt)
 {
 	this->updatePhysics(dt);
-	this->updatePos(dt);	
+	this->updatePos(dt);
 
 	this->updateDirection(this->vel);
 
@@ -51,8 +51,6 @@ void Entity::update(const float dt)
 
 void Entity::updatePhysics(const float dt)
 {
-	constexpr float MAX_VEL{ 120.0f };
-
 	// limit x vel
 	if (vel.x > MAX_VEL)
 		vel.x = MAX_VEL;
@@ -66,12 +64,8 @@ void Entity::updatePhysics(const float dt)
 		vel.y = -MAX_VEL;
 
 	// decelerate
-	constexpr float DECELERATION_RATE{ 6.f };
-
-	this->vel.x *= 1.f - (dt * DECELERATION_RATE);
-	this->vel.y *= 1.f - (dt * DECELERATION_RATE);
-
-	constexpr float MIN_VEL{ 2.f };
+	this->vel.x *= 1.f - (DECELERATION_RATE * dt);
+	this->vel.y *= 1.f - (DECELERATION_RATE * dt);
 
 	if (!isMoving)
 	{
@@ -89,7 +83,10 @@ void Entity::updatePhysics(const float dt)
 
 void Entity::updatePos(const float dt)
 {
-	this->setPos( {pos.x + (vel.x * dt), pos.y + (vel.y * dt)} );
+	this->setPos({
+		pos.x + (vel.x * dt),
+		pos.y + (vel.y * dt)
+		});
 }
 
 void Entity::updateDirection(const sf::Vector2f& v)
@@ -108,8 +105,6 @@ void Entity::updateDirection(const sf::Vector2f& v)
 		else if (!isHorizontal && !isPositive)
 			this->direction = Direction::UP;
 	}
-
-	//std::cout << static_cast<int>(direction) << '\n';
 }
 
 void Entity::move(const sf::Vector2f& v)
@@ -119,5 +114,7 @@ void Entity::move(const sf::Vector2f& v)
 
 	this->isMoving = true;
 }
+
+void Entity::setAcceleration(const sf::Vector2f acc) { this->acc = acc; }
 
 const sf::Vector2f& Entity::getVel() const { return this->vel; }

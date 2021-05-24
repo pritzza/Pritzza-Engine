@@ -10,16 +10,11 @@ AnimatedSprite::AnimatedSprite(const sf::Vector2f& pos, const sf::Vector2i& dime
 {
 }
 
-AnimatedSprite::AnimatedSprite(
-	const sf::Vector2f& pos, 
-	const sf::Vector2i& dimensions, 
-	const sf::Texture& texture, 
-	const sf::Vector2i shDimensions, 
-	const float maxFrameDur)
+AnimatedSprite::AnimatedSprite(const sf::Vector2f& pos, const sf::Vector2i& dim, const sf::Texture& t, const sf::Vector2i shDim, const float maxFrameDur)
 	:
-	Sprite(pos, dimensions, texture)
+	Sprite(pos, dim, t)
 {
-	this->setSpriteSheetDimensions(shDimensions);
+	this->setSpriteSheetDimensions(shDim);
 	this->setKeyFrameMaxDuration(maxFrameDur);
 }
 
@@ -36,7 +31,7 @@ void AnimatedSprite::updateCrop()
 	if (y > spriteSheetTileDimensions.y || y < 0)
 		y = 0;
 
-	this->s.setTextureRect( { (x * w), (y * w), w, h } );
+	this->sprite.setTextureRect( { (x * w), (y * w), w, h } );
 }
 
 void AnimatedSprite::updateFrame(const float dt)
@@ -93,7 +88,7 @@ void AnimatedSprite::updateAnimationState(const Direction& dir, const bool isMov
 		case Direction::RIGHT:	state = AnimationState::MOVING_RIGHT;		break;
 		case Direction::DOWN:	state = AnimationState::MOVING_DOWN;		break;
 		}
-	else
+	else	// if you're not moving anymore, play your idle animation
 		switch (dir)
 		{
 		case Direction::UP:		state = AnimationState::IDLE_UP;			break;

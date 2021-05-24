@@ -8,6 +8,8 @@
 
 #include "../util/PerlinNoise.h"
 
+class GameObject;
+
 class TileMap
 {
 private:
@@ -30,6 +32,8 @@ private:
 
 	siv::PerlinNoise perlinNoise;
 
+	GameObject* target;
+
 private:
 	const TileType generateTile(const float noise) const;
 	const int generateElevation(const float noise) const;
@@ -39,9 +43,11 @@ private:
 	const bool isNearbyBush(const int x, const int y, const Tile* t) const;
 
 public:
-	TileMap();
-
 	void init(const sf::Vector2u& d, const sf::Texture& tilesTexture);
+
+	void update();
+
+	void setTarget(GameObject& t);
 
 	const std::vector<Tile>& getTiles() const;
 	const Tile& getTile(const int i) const;

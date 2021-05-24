@@ -20,7 +20,7 @@ public:
 	void virtual unload() = 0;
 
 	void virtual handleInput() = 0;		// makes events based on keyboard input
-	void virtual update(const float dt) = 0;	// updates all objects of state
+	void virtual update(const double dt, const double pt = 0) = 0;	// updates all objects of state
 	void virtual render() const = 0;
 
 	const bool isLoaded() const { return this->loaded; }

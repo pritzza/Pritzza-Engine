@@ -22,11 +22,13 @@ enum class PanningType
 class Camera
 {
 private:
-	const unsigned int WINDOW_WIDTH;
-	const unsigned int WINDOW_HEIGHT;
 	static constexpr bool ROUND_CAMERA_POS{ false };
 	static constexpr float PANNING_DISTANCE_THRESHOLD{ 1.f };
 	static constexpr float MIN_VEL{ 0.1f };
+
+private:
+	const unsigned int WINDOW_WIDTH;
+	const unsigned int WINDOW_HEIGHT;
 
 private:
 	sf::View view;
@@ -34,9 +36,6 @@ private:
 	sf::Vector2f pos{};
 	sf::Vector2f vel{};
 	float zoom{ 1.f };
-
-	const float NULL_ZOOM_VALUE{ -1.f };	// arbitrary value to say there isnt any tempZoom value we need to assign to zoom
-	float tempZoom{ this->NULL_ZOOM_VALUE };
 
 	CameraState activeState{ CameraState::STATIC };
 	CameraState defaultState{ CameraState::FOLLOWING };
@@ -48,6 +47,8 @@ private:
 	sf::Vector2f focusPoint{};
 	sf::Vector2f startingPoint{};
 	float panningSpeed{ 1.f };
+
+	sf::Vector2f panDisplacement{};
 	
 	bool panComplete{ false };
 	PanningType panningType{ PanningType::LINEAR };
@@ -56,6 +57,8 @@ private:
 	void updatePos(const float dt);
 	void pan(const float dt);
 	void follow();
+
+	void updatePanDisplacement();
 
 	// used to see determine when to stop camera pan
 	const bool passingFocusPoint() const; // if camera has passed focus point when panning linearly

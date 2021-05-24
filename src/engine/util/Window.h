@@ -5,6 +5,8 @@
 class Camera;
 class Sprite;
 class Entity;
+class Text;
+class TileMap;
 
 class Window
 {
@@ -19,6 +21,9 @@ private:
 	const unsigned int HEIGHT;
 	const unsigned int PIXEL_SIZE;
 
+	int renderCount{};
+	int totalCount{};
+
 public:
 	Window(const Camera& camera, const std::string& windowName, const unsigned int width, const unsigned int height, const unsigned int size);
 
@@ -28,6 +33,7 @@ public:
 	void endDraw();
 	void draw(const Sprite& sprite);
 	void draw(Entity& entity, const bool drawBounds = false);
+	void draw(const Text& text);
 
 	sf::RenderWindow& getWindow();
 

@@ -40,11 +40,15 @@ enum TILE_COORDS
 class Tile
 {
 public:
+	static constexpr int WIDTH{ 16 };	// px
+	static constexpr int HEIGHT{ 8 };
+
 	static constexpr int NULL_BUSH_ID{ -1 };
 
 private:
-	const int WIDTH{ 16 };	// px
-	const int HEIGHT{ 8 };
+	int mapWidth;
+
+	sf::Vector2f pos{};
 
 private:
 	TileType tileType;
@@ -54,11 +58,15 @@ private:
 
 	int bushID{ NULL_BUSH_ID };	// if not a bush, set to -1 by default
 
+	int index;
+
 private:
 	void initSprite(const int i, const unsigned int w, const sf::Texture& t);
 
 public:
 	void init(const TileType tileType, const int elevationconst, const int index, const unsigned int mapWidth, const sf::Texture& t);
+
+	void update(const sf::Vector2i targetPos);
 
 	void setTileType(const TileType tileType);
 	void setBushID(const int id);

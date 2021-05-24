@@ -1,26 +1,22 @@
 #include "TileMap.h"
 
-#include <iostream>
-#include <random>
-
-TileMap::TileMap()
-{
-}
+#include "../game objects/GameObject.h"
 
 void TileMap::init(const sf::Vector2u& d, const sf::Texture& tilesTexture)
 {
-	// get rid of all of the grouped bushIndexes
-	this->bushIndexes.clear();
-
-	std::random_device seed;
-	std::mt19937 rng(seed());
-	this->perlinNoise.reseed(rng());
-
 	this->width = d.x;
 	this->height = d.y;
 
 	if (tiles.size() != width * height)
 		tiles.resize(width * height);
+
+	// seed perlinNoise
+	std::random_device seed;
+	std::mt19937 rng(seed());
+	this->perlinNoise.reseed(rng());
+
+	// get rid of all of the grouped bushIndexes
+	this->bushIndexes.clear();
 
 	for (int i = 0; i < width * height; ++i)
 	{
@@ -36,8 +32,20 @@ void TileMap::init(const sf::Vector2u& d, const sf::Texture& tilesTexture)
 	this->perlinNoise.reseed(rng());
 
 	this->generateBushes();
+}
 
-	//std::cout << bushIndexes.size() << ", " << bushIndexes[0].size() << '\n';
+void TileMap::update()
+{
+	if (this->target)	// not nulltpr
+	{
+		const sf::Vector2i tPos(
+			this->target->getCenterPos().x,
+			this->target->getCenterPos().y
+		);
+
+		for (Tile& t : tiles)
+			t.update(sf::Vector2i(tPos));
+	}
 }
 
 const void TileMap::generateBushes()
@@ -56,8 +64,8 @@ const void TileMap::generateBushes()
 		{
 			Tile& t{ tiles[i] };
 
-			if (t.getTileType() != TileType::WATER && t.getTileType() != TileType::SAND)
-				t.setTileType(TileType::BUSH);
+			//if (t.getTileType() != TileType::WATER && t.getTileType() != TileType::SAND)
+			//	t.setTileType(TileType::BUSH);
 
 			// stuff for bush patching/grouping
 			//int bushGroupID{ Tile::NULL_BUSH_ID };
@@ -86,10 +94,10 @@ const TileType TileMap::generateTile(const float noise) const
 {
 	const float noiseNum = noise * static_cast<int>(TileType::NUM_TILES);
 
-	// bottom values
+	// top values
 	const float WATER{ SEA_LEVEL };
 	const float SAND{ WATER + .25f };
-	const float GRASS{ SAND + 2.5f };
+	const float GRASS{ SAND + 2.f };
 	const float MOUNTAIN{ static_cast<int>(TileType::NUM_TILES) };	// upper bound
 
 	if (noiseNum < WATER)
@@ -101,8 +109,6 @@ const TileType TileMap::generateTile(const float noise) const
 	else if (noiseNum < MOUNTAIN)
 		return TileType::MOUNTAIN;
 	else
-		std::cout << "out of bounds terrain gen: 0 < " << noiseNum << "< " << static_cast<int>(TileType::NUM_TILES) << '\n';
-
 		return TileType::WEIRD;	
 }
 
@@ -132,6 +138,8 @@ const bool TileMap::isNearbyBush(const int x, const int y, const Tile* t) const
 
 	return false;
 }
+
+void TileMap::setTarget(GameObject& t) { this->target = &t; }
 
 const std::vector<Tile>& TileMap::getTiles() const { return this->tiles; }
 

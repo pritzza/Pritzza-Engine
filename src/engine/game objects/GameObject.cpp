@@ -2,6 +2,7 @@
 
 #include "../util/Direction.h"
 
+// needs refactor
 void GameObject::init(const sf::Vector2f& pos, const sf::Vector2i& dimensions)
 {
 	this->pos = pos;

@@ -15,7 +15,8 @@ Game::Game(const std::string& windowName, const unsigned int windowWidth, const 
 
 void Game::gameLoop()
 {
-	float dt{};
+	double dt{};	// delta time; time between each frame
+	double pt{};	// processing time; it it takes to execute one gameloop
 
 	while (isRunning())
 	{
@@ -39,12 +40,12 @@ void Game::gameLoop()
 			}
 
 			data.stateMachine.currentState()->handleInput();
-			data.stateMachine.currentState()->update(dt);
+			data.stateMachine.currentState()->update(dt, pt);
 			data.stateMachine.currentState()->render();
 		}
 
-		dt = frameTimer.getElapsedTime().asSeconds();	// processing time before wait
-		sf::sleep(sf::seconds(1.f / FRAME_RATE - dt));
+		pt = frameTimer.getElapsedTime().asSeconds();	// processing time before wait
+		sf::sleep(sf::seconds(1.f / FRAME_RATE - pt));
 
 		dt = frameTimer.getElapsedTime().asSeconds();	// total time (use this for dt calculations)
 	}

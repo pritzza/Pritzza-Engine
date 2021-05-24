@@ -27,12 +27,23 @@ void GameState::load()
 
 	//const auto& bgmAudio = am.get(am.load(AUDIO::RATS_IN_WATER_SONG));
 
+	// LOAD TEXT
+
+	auto& fm = data.resourceManagers.fontManager;
+
+	const auto& defaultFont = fm.get(fm.load(FONT::ERROR));
+
+	//			  font			text		 pos
+	text.init( defaultFont, "this is text", {0,0}, 100 );
+
 	// INITIALIZEING MAP
-	constexpr int LEVEL_WIDTH{ 200 };
-	constexpr int LEVEL_HEIGHT{ 200 };
+	constexpr int LEVEL_WIDTH{ 150 };
+	constexpr int LEVEL_HEIGHT{ 150 };
 
 	tileMap.init({ LEVEL_WIDTH, LEVEL_HEIGHT }, tileTexture);
-	
+
+	tileMap.setTarget(*e1);
+
 	// INITIALIZING ENTITIES
 	//           pos       dime      texture             shDime  keyFrameDur
 	e1->init( { 64,64 }, { 16,16 }, snailTexture,		{ 4,8 }, .2f );
@@ -63,8 +74,21 @@ void GameState::load()
 void GameState::unload()
 {
 	// release all resources
+	// textures
+	auto& tm = data.resourceManagers.textureManager;
 
-	data.resourceManagers.textureManager.unload(TEXTURE::DEFAULT);
+	tm.unload(TEXTURE::TILES_ISOMETRIC);
+	tm.unload(TEXTURE::FROG_SPRITE_SHEET);
+	tm.unload(TEXTURE::SNAIL_SPRITE_SHEET);
+
+	// fonts
+	auto& fm = data.resourceManagers.fontManager;
+
+	//fm.unload(FONT::);
+
+	// audio
+	//auto& am = data.resourceManagers.audioManager;
+
 }
 
 void GameState::handleInput()
@@ -115,7 +139,7 @@ void GameState::handleInput()
 	}
 }
 
-void GameState::update(const float dt)
+void GameState::update(const double dt, const double pt)
 {
 	// tick everything
 
@@ -156,6 +180,11 @@ void GameState::update(const float dt)
 		//
 		//data.camera.multiplyZoom(1.01f);
 	}
+
+	// if you want the weird "load in" effect
+	//tileMap.update();
+
+	text.setText(std::to_string(pt));
 }
 
 void GameState::render() const
@@ -171,6 +200,8 @@ void GameState::render() const
 	
 	for (const auto& e : entities)
 		w.draw(*e, true);
+
+	w.draw(text);
 
 	//w.draw(s);
 

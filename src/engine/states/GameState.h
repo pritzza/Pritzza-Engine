@@ -6,6 +6,8 @@
 
 #include "../levels/TileMap.h"
 
+#include "../gfx/Text.h"
+
 #include "SFML/Audio.hpp"
 
 class GameState : public State
@@ -18,6 +20,8 @@ private:
 	//Sprite s;
 
 	sf::Sound bgm;
+
+	Text text;
 
 	bool isZoomedIn{ false };
 
@@ -39,6 +43,6 @@ public:
 	void virtual unload();
 
 	void virtual handleInput();		// makes events based on keyboard input
-	void virtual update(const float dt);	// updates all objects of state
+	void virtual update(const double dt, const double pt = 0);	// updates all objects of state
 	void virtual render() const;
 };

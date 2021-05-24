@@ -3,6 +3,9 @@
 #include "../gfx/Camera.h"
 #include "../gfx/Sprite.h"
 #include "../game objects/Entity.h"
+#include "../gfx/Text.h"
+
+#include <iostream>
 
 Window::Window(const Camera& camera, const std::string& renderWindowName, const unsigned int width, const unsigned int height, const unsigned int size)
 	:
@@ -31,11 +34,16 @@ void Window::update()
 void Window::beginDraw()
 {
 	this->renderWindow.clear(sf::Color(1, 69, 13));
+
+	renderCount = 0;
+	totalCount = 0;
 }
 
 void Window::endDraw()
 {
 	this->renderWindow.display();
+
+	//std::cout << renderCount << '/' << totalCount << '\n';
 }
 
 void Window::draw(const Sprite& sprite)
@@ -43,8 +51,11 @@ void Window::draw(const Sprite& sprite)
 	if (camera.isInView(sprite))
 	{
 		this->renderWindow.draw(sprite.getSprite());
+		++renderCount;
 	}
-	}
+
+	++totalCount;
+}
 
 void Window::draw(Entity& entity, const bool drawBounds)
 {
@@ -54,7 +65,16 @@ void Window::draw(Entity& entity, const bool drawBounds)
 
 		if (drawBounds)
 			this->renderWindow.draw(entity.getRect());
+
+		++renderCount;
 	}
+
+	++totalCount;
+}
+
+void Window::draw(const Text& text)
+{
+	this->renderWindow.draw(text.getSFText());
 }
 
 sf::RenderWindow& Window::getWindow() { return this->renderWindow;	}
