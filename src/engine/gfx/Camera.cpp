@@ -62,7 +62,7 @@ void Camera::pan(const float dt)
 
 	if (nearingFocusPoint() && this->panningType == PanningType::EXPONENTIAL)
 	{
-		this->panComplete = true;
+		stopPanning();
 	}
 	else if (passingFocusPoint())
 	{
@@ -110,11 +110,28 @@ void Camera::startPanning(const sf::Vector2f& pos, const float smoothness, const
 	this->focusPoint = pos;
 }
 
+void Camera::stopPanning(const PanningType pt)
+{
+	this->panComplete = true;
+
+	if (pt == PanningType::LINEAR)
+	{
+		this->setPos(focusPoint);
+		this->vel = { 0,0 };
+	}
+	else if (pt == PanningType::MANUAL)
+	{
+		this->setPos(target->getCenterPos());
+		this->vel = { 0,0 };
+
+		startFollowing();
+	}
+}
+
 void Camera::setFollowingTarget(const Entity& target) { this->target = &target; }
 void Camera::startFollowing()
 {
 	this->activeState = CameraState::FOLLOWING;
-	this->panComplete = false;
 }
 
 const bool Camera::isInView(const Sprite& s) const

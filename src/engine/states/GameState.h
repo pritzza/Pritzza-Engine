@@ -8,33 +8,25 @@
 
 #include "../gfx/Text.h"
 
-#include "SFML/Audio.hpp"
-
 class GameState : public State
 {
 private:
+	static constexpr int LEVEL_WIDTH{ 250 };
+	static constexpr int LEVEL_HEIGHT{ 250 };
 
-	//sf::Image buffer;
-	//
-	//sf::Texture t;
-	//Sprite s;
+private:
+	std::vector<std::shared_ptr<Entity>> entities;
 
-	sf::Sound bgm;
+	std::shared_ptr<Entity> e1 = std::make_shared<Entity>();
+	std::shared_ptr<Entity> e2 = std::make_shared<Entity>();
 
-	Text text;
+	TileMap tileMap;
 
 	bool isZoomedIn{ false };
 
 	float time{};
-
-	int p{};
-
-	TileMap tileMap;
 	
-	std::shared_ptr<Entity> e1 = std::make_shared<Entity>();
-	std::shared_ptr<Entity> e2 = std::make_shared<Entity>();
-	
-	std::vector<std::shared_ptr<Entity>> entities;
+	Text text;
 
 public:
 	GameState(GameData& data) : State{ data } {}

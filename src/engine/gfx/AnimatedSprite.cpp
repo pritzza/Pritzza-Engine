@@ -20,18 +20,18 @@ AnimatedSprite::AnimatedSprite(const sf::Vector2f& pos, const sf::Vector2i& dim,
 
 void AnimatedSprite::updateCrop()
 {
-	int w = this->sbox.width;
-	int h = this->sbox.height;
-	int x = this->currentSpriteTile.x;
-	int y = this->currentSpriteTile.y;
+	const int spriteW = this->sbox.width;
+	const int spriteH = this->sbox.height;
+	int curFrameX = this->currentSpriteTile.x;
+	int curFrameY = this->currentSpriteTile.y;
 	
 	// if currentSpriteTile go out of bounds, set to 0
-	if (x > spriteSheetTileDimensions.x || x < 0)
-		x = 0;
-	if (y > spriteSheetTileDimensions.y || y < 0)
-		y = 0;
+	if (curFrameX > spriteSheetTileDimensions.x || curFrameX < 0)
+		curFrameX = 0;
+	if (curFrameY > spriteSheetTileDimensions.y || curFrameY < 0)
+		curFrameY = 0;
 
-	this->sprite.setTextureRect( { (x * w), (y * w), w, h } );
+	this->sprite.setTextureRect( { (curFrameX * spriteW), (curFrameY * spriteH), spriteW, spriteH } );
 }
 
 void AnimatedSprite::updateFrame(const float dt)

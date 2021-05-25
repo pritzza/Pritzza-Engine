@@ -10,8 +10,6 @@ void GameState::load()
 {
 	// load all resources
 
-	//buffer.create(data.window.getWidth(), data.window.getHeight());
-
 	//// LOADING RESOURCES
 
 	// LOADING TEXTURES
@@ -31,15 +29,12 @@ void GameState::load()
 
 	auto& fm = data.resourceManagers.fontManager;
 
-	const auto& defaultFont = fm.get(fm.load(FONT::ERROR));
+	const auto& defaultFont = fm.get(FONT::ERROR);
 
 	//			  font			text		 pos
 	text.init( defaultFont, "this is text", {0,0}, 100 );
 
 	// INITIALIZEING MAP
-	constexpr int LEVEL_WIDTH{ 150 };
-	constexpr int LEVEL_HEIGHT{ 150 };
-
 	tileMap.init({ LEVEL_WIDTH, LEVEL_HEIGHT }, tileTexture);
 
 	tileMap.setTarget(*e1);
@@ -60,12 +55,7 @@ void GameState::load()
 	c.setFollowingTarget(*e1);
 	c.startFollowing();
 
-	//data.camera.setPos({ 74, 49 });
-
 	// INITIALIZING AUDIO
-
-	//bgm.setBuffer(bgmAudio);
-	//bgm.play();
 
 	// FINISHING
 	setLoaded();	// enable the state's "loaded" flag after everything has been loaded
@@ -108,10 +98,10 @@ void GameState::handleInput()
 	
 	Camera& camera{ data.camera };
 	
-	if (kb.space.isTapped() && !camera.isPanComplete())
+	if (kb.space.isTapped())
 	{
-		// pan linearly
-		//camera.startPanning( e2->getCenterPos(), 100.f, PanningType::LINEAR);
+		camera.stopPanning();
+		camera.startFollowing();
 
 		if (isZoomedIn)
 		{
@@ -124,62 +114,37 @@ void GameState::handleInput()
 			isZoomedIn = true;
 		}
 	}
-	if (kb.e.isTapped() && !camera.isPanComplete())
+	if (kb.e.isTapped())
 	{
-		// pan exponentially
-		//camera.startPanning(e2->getCenterPos(), 0.5f, PanningType::EXPONENTIAL);
-
-		tileMap.init({ 100, 100 }, data.resourceManagers.textureManager.get(TEXTURE::TILES_ISOMETRIC));
-	}
-	else if ((kb.space.isTapped() || kb.e.isTapped()) && camera.isPanComplete())
-	{
-		// reset camera back to e1
-		camera.setPos(e1->getCenterPos());
-		camera.startFollowing();
+		tileMap.init({ LEVEL_WIDTH, LEVEL_HEIGHT }, data.resourceManagers.textureManager.get(TEXTURE::TILES_ISOMETRIC));
 	}
 }
 
 void GameState::update(const double dt, const double pt)
 {
-	// tick everything
-
-	// cellular automata stuff
-	//if (p < (data.window.getWidth() * data.window.getHeight()) - 1)
-	//{
-	//	++p;
-	//	buffer.setPixel(p % data.window.getWidth(), p / data.window.getWidth(), 
-	//		sf::Color( int(cos(p) * 8960) % 255, int(tan(p) * 379) % 255, int(sin(p) * 2006) % 255
-	//	));
-	//}
-	//
-	//t.loadFromImage(buffer);
-	//s.setTexture(t);
-
-	this->time += dt;// *3.f;
+	this->time += dt;
 
 	e2->move({ cosf(time * 2) / 5.f, sinf(time * 2) / 5.f });
 
 	for (const auto e : entities)
 		e->update(dt);
 	
-	//std::cout << e1->getVel().x << ", " << e1->getVel().y << '\n';
-	
-	if (e1->isColliding(*e2))
-	{
-		//std::shared_ptr<Entity> e = std::make_shared<Entity>();
-		//auto& tm = data.resourceManagers.textureManager;
-		//
-		//e->init({ entities.back()->getCenterPos().x,0 }, {4,4}, tm.get(TEXTURE::DEFAULT));
-		//
-		//entities.push_back(e);
-	
-		//data.camera.startPanning({ 100.f, 0.f }, 1.f, PanningType::LINEAR);
-		
-		//e1->move({ 1,0 });
-		//e1->setSize({ 32,32 });
-		//
-		//data.camera.multiplyZoom(1.01f);
-	}
+	//if (e1->isColliding(*e2))
+	//{
+	//	std::shared_ptr<Entity> e = std::make_shared<Entity>();
+	//	auto& tm = data.resourceManagers.textureManager;
+	//	
+	//	e->init({ entities.back()->getCenterPos().x,0 }, {4,4}, tm.get(TEXTURE::DEFAULT));
+	//	
+	//	entities.push_back(e);
+	//
+	//	data.camera.startPanning({ 100.f, 0.f }, 1.f, PanningType::LINEAR);
+	//	
+	//	e1->move({ 1,0 });
+	//	e1->setSize({ 32,32 });
+	//	
+	//	data.camera.multiplyZoom(1.01f);
+	//}
 
 	// if you want the weird "load in" effect
 	//tileMap.update();
@@ -201,9 +166,7 @@ void GameState::render() const
 	for (const auto& e : entities)
 		w.draw(*e, true);
 
-	w.draw(text);
-
-	//w.draw(s);
+	//w.draw(text);
 
 	w.endDraw();
 }

@@ -1,10 +1,15 @@
 #pragma once
 
 #include "Window.h"
+
 #include "../states/StateMachine.h"
+
 #include "../resource manager/ResourceManagers.h"
+
 #include "../gfx/Camera.h"
+
 #include "../input/Keyboard.h"
+#include "../input/Mouse.h"
 
 struct GameData
 {
@@ -12,7 +17,8 @@ struct GameData
 		:
 		window { camera, windowName, windowWidth, windowHeight, windowScale },
 		camera { windowWidth, windowHeight },
-		keyboard { window.getWindow() }
+		keyboard { window.getWindow() },
+		mouse { window.getWindow() }
 	{}
 
 	Camera camera;
@@ -22,5 +28,6 @@ struct GameData
 	ResourceManagers resourceManagers;
 	
 	Keyboard keyboard;
+	Mouse mouse;
 
 };

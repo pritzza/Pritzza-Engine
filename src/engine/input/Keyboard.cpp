@@ -5,7 +5,8 @@
 Keyboard::Keyboard(sf::RenderWindow& window)
 	:
 	window{ window }
-{}
+{
+}
 
 void Keyboard::update()
 {

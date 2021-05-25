@@ -26,8 +26,6 @@ void Tile::init(const TileType tileType, const int elevation, const int i, const
 
 void Tile::update(const sf::Vector2i targetPos)
 {
-	constexpr int RENDER_DISTANCE{ 256 };
-	
 	const int distance = sqrt( pow( abs(targetPos.x - pos.x), 2 ) + pow( abs(targetPos.y - pos.y), 2 ));
 	
 	sf::Vector2f newPos(
@@ -36,10 +34,7 @@ void Tile::update(const sf::Vector2i targetPos)
 	);
 
 	if (distance > RENDER_DISTANCE)
-	{
-		constexpr int TILE_FADE_SMOOTHNESS{ 2 };
 		newPos.y += static_cast<int>( ( pow( distance - RENDER_DISTANCE, 2 ) / (RENDER_DISTANCE * TILE_FADE_SMOOTHNESS) ) );
-	}
 
 	//this->sprite.getSprite().setColor( sf::Color(255,255,255, 255.f / 1 ));
 

@@ -45,6 +45,10 @@ public:
 
 	static constexpr int NULL_BUSH_ID{ -1 };
 
+	// for fade effect
+	static constexpr int RENDER_DISTANCE{ 256 };
+	static constexpr int TILE_FADE_SMOOTHNESS{ 2 };
+
 private:
 	int mapWidth;
 

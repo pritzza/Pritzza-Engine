@@ -16,7 +16,7 @@ Game::Game(const std::string& windowName, const unsigned int windowWidth, const 
 void Game::gameLoop()
 {
 	double dt{};	// delta time; time between each frame
-	double pt{};	// processing time; it it takes to execute one gameloop
+	double pt{};	// processing time; the time it takes to execute one gameloop excluding the wait/sleep
 
 	while (isRunning())
 	{
@@ -30,7 +30,7 @@ void Game::gameLoop()
 		{
 			data.camera.update(dt);
 
-			//data.mouse.update();
+			data.mouse.update();
 			data.keyboard.update();
 
 			if (!data.stateMachine.currentState()->isLoaded())

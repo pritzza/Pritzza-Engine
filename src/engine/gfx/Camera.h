@@ -16,7 +16,8 @@ enum class CameraState
 enum class PanningType
 {
 	LINEAR,
-	EXPONENTIAL
+	EXPONENTIAL,
+	MANUAL
 };
 
 class Camera
@@ -74,6 +75,7 @@ public:
 	void startFollowing();
 
 	void startPanning(const sf::Vector2f& pos, const float smoof, const PanningType pt);	// smooth is how long it takes to pan
+	void stopPanning(const PanningType pt= PanningType::MANUAL);
 
 	const bool isInView(const Sprite& s) const;
 
