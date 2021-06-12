@@ -1,26 +1,33 @@
 #include "Text.h"
 
-void Text::init(const sf::Font& font, const std::string& string, const sf::Vector2f& pos, const int size, const sf::Color color)
+void Text::init(const sf::Font& font, const TextType tt, const std::string& string, const sf::Vector2f& pos, const int size, const sf::Color color)
 {
-	this->text.setFont(font);
+	this->setFont(font);
 
-	this->text.setPosition(pos);
-	this->text.setString(string);
-	this->text.setCharacterSize(size);
-	this->text.setFillColor(color);
+	this->setPosition(pos);
+	this->setString(string);
+	this->setCharacterSize(size);
+	this->setFillColor(color);
 }
 
-void Text::setText(const std::string& text)
+void Text::initAppearance(const int size, const sf::Color fillColor, const sf::Color borderColor, const int borderThickness)
 {
-	this->text.setString(text);
+	this->setCharacterSize(size);
+	this->setFillColor(fillColor);
 }
 
-void Text::setPos(const sf::Vector2f& pos)
+void Text::update()
 {
-	this->text.setPosition(pos);
-}
+	switch (this->textType)
+	{
+	case TextType::FOLLOWING:
 
-const sf::Text& Text::getSFText() const
-{
-	return this->text;
+		break;
+	case TextType::STATIC:
+
+		break;
+	case TextType::HUD:
+
+		break;
+	}
 }

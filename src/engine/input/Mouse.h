@@ -19,5 +19,5 @@ public:
 
 	void update();
 
-	const sf::Vector2i& getPos() const;
+	const sf::Vector2i getPos() const;
 };

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../gfx/Sprite.h"
+#include "../gfx/Sprites/Sprite.h"
 
 enum class TileType
 {
@@ -77,6 +77,6 @@ public:
 
 	const TileType getTileType() const;
 	const int getBushID() const;
-	const sf::Vector2i& getDimensions() const;
+	const sf::Vector2i getDimensions() const;
 	const Sprite& getSprite() const;
 };

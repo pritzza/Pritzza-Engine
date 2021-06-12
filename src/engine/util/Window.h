@@ -40,6 +40,9 @@ public:
 	const bool isOpen() const;
 	const bool isFocused() const;
 
+	const int getRenderCount() const;
+	const int getObjectCount() const;
+
 	const unsigned int getWidth() const;
 	const unsigned int getHeight() const;
 	const unsigned int getPixelSize() const;

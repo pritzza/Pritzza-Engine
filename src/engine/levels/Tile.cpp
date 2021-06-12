@@ -74,5 +74,5 @@ void Tile::setBushID(const int id) { this->bushID = id; }
 
 const TileType Tile::getTileType() const { return this->tileType; }
 const int Tile::getBushID() const { return this->bushID; }
-const sf::Vector2i& Tile::getDimensions() const { return sf::Vector2i{ WIDTH, HEIGHT }; }
+const sf::Vector2i Tile::getDimensions() const { return sf::Vector2i{ WIDTH, HEIGHT }; }
 const Sprite& Tile::getSprite() const { return this->sprite; }

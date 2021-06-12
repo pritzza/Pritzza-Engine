@@ -2,6 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 
+class GameObject;
+
 enum class TextType
 {
 	HUD,		// doesnt move, un effected by camera movement/zoom
@@ -9,16 +11,33 @@ enum class TextType
 	FOLLOWING	// follows some game object and is effected by camera zomm
 };
 
-class Text
+class Text : public sf::Text
 {
 private:
-	sf::Text text;
+	TextType textType;
+
+	const GameObject* followingTarget{ nullptr };
+
+	sf::Vector2i anchor{};
 
 public:
-	void init(const sf::Font& font, const std::string& string = "", const sf::Vector2f& pos = {0,0}, const int size = 10, const sf::Color color = { 0,0,0 });
+	void init(
+		const sf::Font& font, 
+		const TextType tt, 
+		const std::string& string = "", 
+		const sf::Vector2f& pos = {0,0}, 
+		const int size = 10, 
+		const sf::Color color = { 0,0,0 }
+	);
+	void initAppearance(
+		const int size, 
+		const sf::Color color = { 0,0,0 }, 
+		const sf::Color outline = {0,0,0}, 
+		const int borderThickness = 0
+	);
 
-	void setText(const std::string& text);
-	void setPos(const sf::Vector2f& pos);
+	virtual void update();
 
-	const sf::Text& getSFText() const;
+	void setFollowingTarget(const GameObject* const target);
+	void setAnchor(const sf::Vector2i anchor);
 };

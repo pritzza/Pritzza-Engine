@@ -2,7 +2,7 @@
 
 #include "../util/GameData.h"
 
-#include <cmath>
+#include "BattleState.h"
 
 #include <iostream>
 
@@ -31,8 +31,8 @@ void GameState::load()
 
 	const auto& defaultFont = fm.get(FONT::ERROR);
 
-	//			  font			text		 pos
-	text.init( defaultFont, "this is text", {0,0}, 100 );
+	//			  font			                   text		   pos
+	text.init( defaultFont, TextType::STATIC, "this is text", {0,0}, 100 );
 
 	// INITIALIZEING MAP
 	tileMap.init({ LEVEL_WIDTH, LEVEL_HEIGHT }, tileTexture);
@@ -118,13 +118,24 @@ void GameState::handleInput()
 	{
 		tileMap.init({ LEVEL_WIDTH, LEVEL_HEIGHT }, data.resourceManagers.textureManager.get(TEXTURE::TILES_ISOMETRIC));
 	}
+
+	if (data.mouse.mclick.isTapped())
+	{
+		if (!data.stateMachine.isStateLoaded(STATE_ID::BATTLE))
+			data.stateMachine.queueOperation({ STATE_MACHINE_OPERATION::ADD, STATE_ID::BATTLE, std::make_shared<BattleState>(BattleState(data)) });
+
+		data.stateMachine.queueOperation({ STATE_MACHINE_OPERATION::CHANGE, STATE_ID::BATTLE });
+	}
 }
 
 void GameState::update(const double dt, const double pt)
 {
-	this->time += dt;
+	time += dt;
 
-	e2->move({ cosf(time * 2) / 5.f, sinf(time * 2) / 5.f });
+	e2->move({ 
+		cosf(time * 2) / 5.f, 
+		sinf(time * 2) / 5.f 
+		});
 
 	for (const auto e : entities)
 		e->update(dt);
@@ -149,7 +160,7 @@ void GameState::update(const double dt, const double pt)
 	// if you want the weird "load in" effect
 	//tileMap.update();
 
-	text.setText(std::to_string(pt));
+	text.setString(std::to_string( (dt/pt) * (1.f/dt) ));
 }
 
 void GameState::render() const
@@ -166,7 +177,7 @@ void GameState::render() const
 	for (const auto& e : entities)
 		w.draw(*e, true);
 
-	//w.draw(text);
+	w.draw(text);
 
 	w.endDraw();
 }

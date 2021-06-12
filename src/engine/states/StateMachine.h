@@ -25,5 +25,8 @@ public:
 
 	void queueOperation(const StateMachineEvent& operation);
 
+	const bool isStateLoaded(const STATE_ID state) const;
+
+	const int getSize() const;
 	const std::shared_ptr<State> currentState() const;
 };

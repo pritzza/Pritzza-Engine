@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../gfx/AnimatedSprite.h"
+#include "../gfx/Sprites/AnimatedSprite.h"
 #include "../util/AABB.h"
 
 class GameObject

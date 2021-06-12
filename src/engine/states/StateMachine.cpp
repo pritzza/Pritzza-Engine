@@ -39,6 +39,16 @@ void StateMachine::queueOperation(const StateMachineEvent& operation)
 	operationQueue.push_back(operation);
 }
 
+const bool StateMachine::isStateLoaded(const STATE_ID state) const
+{
+	return this->states.find(state) != states.end();
+}
+
+const int StateMachine::getSize() const
+{
+	return this->states.size();
+}
+
 const std::shared_ptr<State> StateMachine::currentState() const
 {
 	if (states.at(currentStateID) != nullptr)

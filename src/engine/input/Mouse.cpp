@@ -15,7 +15,7 @@ void Mouse::update()
 	mclick.update(sf::Mouse::isButtonPressed(sf::Mouse::Middle));
 }
 
-const sf::Vector2i& Mouse::getPos() const
+const sf::Vector2i Mouse::getPos() const
 {
 	return sf::Mouse::getPosition(this->window);
 }

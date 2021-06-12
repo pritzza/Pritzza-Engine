@@ -1,6 +1,7 @@
 #include "Camera.h"
 
-#include "../gfx/Sprite.h"
+#include "../gfx/Sprites/Sprite.h"
+
 #include "../game objects/Entity.h"
 
 Camera::Camera(const unsigned int WINDOW_WIDTH, const unsigned int WINDOW_HEIGHT)
@@ -128,11 +129,8 @@ void Camera::stopPanning(const PanningType pt)
 	}
 }
 
-void Camera::setFollowingTarget(const Entity& target) { this->target = &target; }
-void Camera::startFollowing()
-{
-	this->activeState = CameraState::FOLLOWING;
-}
+void Camera::setFollowingTarget(const Entity& target)	{ this->target = &target;					  }
+void Camera::startFollowing()							{ this->activeState = CameraState::FOLLOWING; }
 
 const bool Camera::isInView(const Sprite& s) const
 {
@@ -153,6 +151,11 @@ const bool Camera::isInView(const Sprite& s) const
 		 (sy + sh >= y && sy <= y + h)) ||
 		((sx <= x && sx + sw >= x + w) &&
 		 (sy <= y && sy + sh >= y + h));
+}
+
+const bool Camera::isInView(const Text& t) const
+{
+	return true;	// need to implement
 }
 
 void Camera::addZoom(const float addend)		{ this->zoom += addend;  }

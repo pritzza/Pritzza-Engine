@@ -21,7 +21,8 @@ enum class FONT
 enum class SOUND
 {
 	ERROR,
-	DEFAULT
+	DEFAULT,
+	HIT
 };
 enum class MUSIC
 {
@@ -32,10 +33,10 @@ enum class MUSIC
 template <class Key, class Resource>
 class ResourceManager
 {
-protected:
+private:
 	std::unordered_map<Key, Resource> resources;
 
-protected:
+private:
 	virtual const Key loadFromFile(const std::string& fileName, const Key resID)
 	{
 		if (this->resources.find(resID) == resources.end())	// res not already loaded
@@ -89,9 +90,10 @@ public:
 	{
 		switch (id)
 		{
-		case SOUND::DEFAULT:	return loadFromFile("res/audio/170- Earthbound - OK _Ssuka_.mp3", id);
-		
-		default:				return loadFromFile("res/audio/001- EarthBound - Burp.mp3", id);	// error resource should always be loaded
+		case SOUND::DEFAULT:	return loadFromFile("res/audio/ruby_000B.wav", id);
+		case SOUND::HIT:		return loadFromFile("res/audio/ruby_00DE.wav", id);
+
+		default:				return loadFromFile("res/audio/ruby_00EA.wav", id);	// error resource should always be loaded
 		}
 	}
 
@@ -99,9 +101,9 @@ public:
 	{
 		switch (id)
 		{
-		case MUSIC::DEFAULT:	return loadFromFile("res/audio/170- Earthbound - OK _Ssuka_.mp3", id);
+		case MUSIC::DEFAULT:	return loadFromFile("res/audio/ruby_000B.wav", id);
 
-		default:				return loadFromFile("res/audio/001- EarthBound - Burp.mp3", id);	// error resource should always be loaded
+		default:				return loadFromFile("res/audio/ruby_00EA.wav", id);	// error resource should always be loaded
 		}
 	}
 

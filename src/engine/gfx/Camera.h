@@ -5,6 +5,7 @@
 class Sprite;
 class Entity;
 class GameObject;
+class Text;
 
 enum class CameraState 
 {
@@ -78,6 +79,7 @@ public:
 	void stopPanning(const PanningType pt= PanningType::MANUAL);
 
 	const bool isInView(const Sprite& s) const;
+	const bool isInView(const Text& t) const;
 
 	// moving the camera's view
 	void move(const sf::Vector2f& vel);		// relative

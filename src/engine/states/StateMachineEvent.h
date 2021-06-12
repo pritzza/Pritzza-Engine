@@ -5,7 +5,8 @@ class State;
 enum class STATE_ID
 {
 	VOID,
-	DEFAULT
+	DEFAULT,
+	BATTLE
 };
 
 enum class STATE_MACHINE_OPERATION

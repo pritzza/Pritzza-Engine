@@ -1,11 +1,10 @@
 #include "Window.h"
 
 #include "../gfx/Camera.h"
-#include "../gfx/Sprite.h"
-#include "../game objects/Entity.h"
+#include "../gfx/Sprites/Sprite.h"
 #include "../gfx/Text.h"
 
-#include <iostream>
+#include "../game objects/Entity.h"
 
 Window::Window(const Camera& camera, const std::string& renderWindowName, const unsigned int width, const unsigned int height, const unsigned int size)
 	:
@@ -26,8 +25,8 @@ void Window::update()
 		switch (event.type)
 		{
 		case sf::Event::Closed:			this->renderWindow.close();			break;
-		case sf::Event::GainedFocus:	this->focused = true;	break;
-		case sf::Event::LostFocus:		this->focused = false;	break;
+		case sf::Event::GainedFocus:	this->focused = true;				break;
+		case sf::Event::LostFocus:		this->focused = false;				break;
 		}
 }
 
@@ -42,8 +41,6 @@ void Window::beginDraw()
 void Window::endDraw()
 {
 	this->renderWindow.display();
-
-	//std::cout << renderCount << '/' << totalCount << '\n';
 }
 
 void Window::draw(const Sprite& sprite)
@@ -74,13 +71,16 @@ void Window::draw(Entity& entity, const bool drawBounds)
 
 void Window::draw(const Text& text)
 {
-	this->renderWindow.draw(text.getSFText());
+	this->renderWindow.draw(text);
 }
 
-sf::RenderWindow& Window::getWindow() { return this->renderWindow;	}
+sf::RenderWindow& Window::getWindow() { return this->renderWindow;    }
 
 const bool Window::isOpen() const	  { return renderWindow.isOpen(); }
-const bool Window::isFocused() const  { return this->focused;   }
+const bool Window::isFocused() const  { return this->focused;		  }
+
+const int Window::getRenderCount() const	{ return this->renderCount;	}
+const int Window::getObjectCount() const	{ return this->totalCount;	}
 
 const unsigned int Window::getWidth()  const		{ return WIDTH;		  }
 const unsigned int Window::getHeight() const		{ return HEIGHT;	  }
